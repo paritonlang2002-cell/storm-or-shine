@@ -1,0 +1,1504 @@
+<!-- This file was created with AI-assisted coding. The design, numbers and text were directed and reviewed by the author, Pariton Langpoklakpam. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="AI-assisted; directed by the author">
+<title>Storm or Shine</title>
+<meta name="description" content="Storm or Shine: a Junior Astronaut Mission Trainer. Hide from the storm, or keep the base shining? Command a small Moon base for ten days using real NASA space weather records.">
+<meta property="og:title" content="Storm or Shine">
+<meta property="og:description" content="Hide from the storm, or keep the base shining? A Junior Astronaut Mission Trainer built for the 2026 NASA Space Apps Challenge.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --space-black: #080A0B;
+    --regolith: #9A958E;
+    --habitat: #E6E3DC;
+    --cobalt: #2B4A8C;
+    --gold: #C9A24A;
+    --hazard: #F2C230;
+    --panel: #171B1D;
+    --panel-light: #252B2E;
+    --muted: #BDB8B0;
+    --line: #596064;
+    --green: #A8C7A0;
+    --red: #F0A19A;
+    --heading-font: "Baloo 2", "Trebuchet MS", sans-serif;
+    --body-font: "Atkinson Hyperlegible", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--space-black); }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--habitat);
+    background: var(--space-black);
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, a:focus-visible, [tabindex="0"]:focus-visible {
+    outline: 3px solid var(--hazard);
+    outline-offset: 4px;
+  }
+
+  a { color: var(--hazard); text-underline-offset: 3px; }
+  a:hover { color: var(--habitat); }
+
+  .shell { width: min(1280px, calc(100% - 48px)); margin: 0 auto; }
+  .topbar {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #343A3D;
+  }
+
+  .brand { display: flex; align-items: center; gap: 11px; min-width: 190px; }
+  .brand-mark { width: 32px; height: 32px; flex: 0 0 auto; }
+  .brand-name { font: 700 1.35rem/1 var(--heading-font); letter-spacing: .01em; }
+  .topbar-right { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+  .difficulty-pill { border: 1px solid var(--line); padding: 5px 11px; border-radius: 3px; color: var(--habitat); font-size: .85rem; }
+  .about-link { color: var(--habitat); font-weight: 700; background: none; border: 0; padding: 10px 0; text-decoration: underline; text-underline-offset: 4px; }
+  .day-tracker { display: flex; align-items: center; gap: 5px; }
+  .day-dot { width: 15px; height: 7px; background: #394044; border: 1px solid #687075; }
+  .day-dot.done { background: var(--gold); border-color: var(--gold); }
+  .day-dot.current { background: var(--hazard); border-color: var(--hazard); }
+  .tracker-label { font-size: .82rem; color: var(--muted); margin-right: 4px; white-space: nowrap; }
+
+  main { padding: 30px 0 54px; }
+  .screen { width: 100%; }
+  .screen-heading { margin: 0 0 8px; font: 700 clamp(2rem, 4vw, 3.3rem)/1.04 var(--heading-font); letter-spacing: -.025em; }
+  .screen-intro { max-width: 700px; color: var(--muted); margin: 0 0 24px; font-size: 1.08rem; }
+  .eyebrow { margin: 0 0 8px; color: var(--gold); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .button {
+    min-height: 48px;
+    border: 1px solid var(--habitat);
+    background: var(--habitat);
+    color: var(--space-black);
+    padding: 11px 20px;
+    font-weight: 700;
+    border-radius: 3px;
+  }
+  .button:hover { background: var(--hazard); border-color: var(--hazard); }
+  .button.primary { background: var(--hazard); border-color: var(--hazard); }
+  .button.primary:hover { background: var(--habitat); border-color: var(--habitat); }
+  .button.secondary { color: var(--habitat); background: transparent; border-color: var(--line); }
+  .button.secondary:hover { border-color: var(--hazard); color: var(--hazard); background: transparent; }
+  .button:disabled { opacity: .4; cursor: not-allowed; }
+  .text-button { background: none; border: 0; color: var(--hazard); padding: 7px 0; text-decoration: underline; text-underline-offset: 4px; font-weight: 700; }
+
+  .title-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(290px, .8fr); gap: 34px; align-items: center; min-height: 570px; }
+  .title-copy { padding: 28px 0; }
+  .title-wordmark { font: 800 clamp(3.5rem, 8vw, 6.8rem)/.85 var(--heading-font); letter-spacing: -.055em; margin: 10px 0 18px; max-width: 650px; }
+  .title-wordmark span { color: var(--hazard); }
+  .tagline { font-size: clamp(1.15rem, 2vw, 1.5rem); color: var(--muted); margin: 0 0 28px; }
+  .difficulty-choice { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 22px; }
+  .difficulty-option { min-width: 145px; min-height: 58px; text-align: left; color: var(--habitat); border: 1px solid var(--line); background: transparent; padding: 9px 13px; border-radius: 3px; }
+  .difficulty-option strong { display: block; font: 700 1.05rem var(--heading-font); }
+  .difficulty-option span { color: var(--muted); font-size: .84rem; }
+  .difficulty-option.selected { border: 2px solid var(--hazard); padding: 8px 12px; background: #202326; }
+  .title-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .title-art { width: 100%; max-width: 520px; justify-self: center; }
+  .title-art svg { display: block; width: 100%; height: auto; }
+  .live-panel { border-top: 1px solid var(--line); margin-top: 28px; padding-top: 14px; max-width: 470px; }
+  .live-panel strong { display: block; font-size: .94rem; }
+  .live-panel p { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  .footer-note { border-top: 1px solid #343A3D; margin-top: 30px; padding-top: 13px; color: var(--muted); font-size: .82rem; }
+
+  .briefing-layout { display: grid; grid-template-columns: 1.1fr .9fr; gap: 34px; align-items: start; }
+  .briefing-list { list-style: none; padding: 0; margin: 25px 0; counter-reset: brief; }
+  .briefing-list li { counter-increment: brief; display: flex; gap: 15px; align-items: flex-start; border-top: 1px solid var(--line); padding: 17px 0; }
+  .briefing-list li::before { content: "0" counter(brief); color: var(--gold); font: 700 1.2rem var(--heading-font); }
+  .briefing-list p { margin: 0; }
+  .word { display: inline; border: 0; border-bottom: 1px dashed var(--hazard); background: none; color: var(--hazard); padding: 0; font-weight: 700; }
+  .briefing-side { background: var(--panel); border-left: 3px solid var(--gold); padding: 22px; }
+  .briefing-side h2 { font: 700 1.4rem var(--heading-font); margin: 0 0 8px; }
+  .briefing-side p { color: var(--muted); margin: 0 0 15px; }
+
+  .game-topline { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; margin-bottom: 18px; }
+  .game-topline .screen-heading { font-size: 2rem; margin: 0; }
+  .game-grid { display: grid; grid-template-columns: minmax(0, 1.62fr) minmax(320px, 1fr); gap: 24px; align-items: start; }
+  .scene-wrap { min-width: 0; border: 1px solid #41484B; background: #101416; position: relative; overflow: hidden; }
+  .scene-label { position: absolute; z-index: 2; left: 14px; top: 12px; color: var(--muted); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+  .forecast-strip { position: absolute; z-index: 2; top: 42px; left: 14px; right: 14px; display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; }
+  .forecast-item { flex: 0 0 auto; border: 1px solid #697176; background: rgba(8,10,11,.86); padding: 5px 8px; font-size: .75rem; color: var(--habitat); }
+  .forecast-item strong { color: var(--hazard); }
+  .forecast-empty { color: #BDB8B0; font-size: .78rem; padding: 5px 0; }
+  .base-scene { width: 100%; display: block; height: auto; min-height: 300px; }
+  .scene-caption { display: flex; justify-content: space-between; gap: 12px; padding: 9px 13px; background: #171B1D; border-top: 1px solid #41484B; color: var(--muted); font-size: .8rem; }
+  .scene-caption strong { color: var(--habitat); }
+  .module-hit { cursor: pointer; }
+  .module-hit:focus { outline: none; }
+  .module-hit:focus .module-outline { stroke: var(--hazard); stroke-width: 5; }
+  .crew { transition: transform .35s ease; }
+  .crew.in-shelter { transform: translate(0px, 93px); }
+  .console { min-width: 0; }
+  .console-section { border-top: 1px solid var(--line); padding: 15px 0; }
+  .console-section:first-child { border-top: 0; padding-top: 0; }
+  .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 12px; font: 700 1.25rem var(--heading-font); }
+  .section-title small { color: var(--muted); font: 400 .82rem var(--body-font); }
+  .meters { display: grid; grid-template-columns: 1fr 1fr; gap: 13px 16px; }
+  .meter { min-width: 0; }
+  .meter-top { display: flex; justify-content: space-between; gap: 8px; font-size: .9rem; }
+  .meter-name { font-weight: 700; }
+  .meter-value { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .meter-track { height: 10px; background: #333A3D; margin-top: 6px; border: 1px solid #687075; position: relative; }
+  .meter-fill { height: 100%; background: var(--gold); position: relative; }
+  .meter-fill.oxygen { background: #A9C9C8; }
+  .meter-fill.shield { background: var(--cobalt); }
+  .meter-fill.dose { background: var(--hazard); }
+  .meter-ghost { position: absolute; top: -1px; bottom: -1px; border-left: 2px dashed var(--habitat); opacity: .95; }
+  .meter-note { color: var(--muted); font-size: .75rem; margin-top: 3px; }
+  .dose-meter .meter-fill { background: var(--hazard); }
+  .dose-meter.high .meter-fill { background: #D97E54; }
+  .dose-meter.critical .meter-fill { background: var(--red); }
+  .seesaw { margin-top: 16px; padding: 10px 12px 7px; border: 1px solid #41484B; background: #111517; }
+  .seesaw svg { width: 100%; height: 68px; display: block; }
+  .seesaw-caption { text-align: center; color: var(--muted); font-size: .78rem; margin: 0; }
+  .queue-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .queue-slot { min-height: 57px; padding: 8px; border: 1px dashed #687075; background: transparent; color: var(--muted); text-align: left; font-size: .82rem; }
+  .queue-slot.filled { border-style: solid; border-color: var(--gold); color: var(--habitat); background: #222629; }
+  .queue-slot span { display: block; font-size: .72rem; color: var(--gold); }
+  .action-list { display: grid; gap: 8px; }
+  .action-button { width: 100%; display: grid; grid-template-columns: 38px minmax(0,1fr) auto; align-items: center; gap: 10px; text-align: left; padding: 9px 10px; min-height: 60px; border: 1px solid #50585C; background: #171C1F; color: var(--habitat); }
+  .action-button:hover:not(:disabled) { border-color: var(--hazard); background: #22282B; }
+  .action-button:disabled { opacity: .42; cursor: not-allowed; }
+  .action-icon { width: 30px; height: 30px; color: var(--gold); }
+  .action-name { font-weight: 700; display: block; line-height: 1.2; }
+  .action-desc { color: var(--muted); font-size: .77rem; display: block; margin-top: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+  .chip { border: 1px solid #687075; color: var(--habitat); padding: 3px 5px; font-size: .7rem; white-space: nowrap; }
+  .chip.power { border-color: var(--gold); }
+  .action-message { min-height: 25px; color: var(--hazard); font-size: .85rem; margin: 8px 0 0; }
+  .console-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 14px; }
+  .console-bottom p { color: var(--muted); font-size: .8rem; margin: 0; }
+  .night-banner { background: #242B30; border-left: 3px solid var(--cobalt); padding: 9px 12px; color: var(--habitat); margin: 0 0 12px; font-size: .88rem; }
+  .night-scene .sky { fill: #050607; }
+  .night-scene .solar-array { opacity: .42; }
+  .storm-screen .scene-wrap { border-color: var(--hazard); }
+
+  .storm-layout { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr); gap: 24px; align-items: stretch; }
+  .storm-card { border: 1px solid var(--hazard); background: var(--panel); padding: 23px; position: relative; overflow: hidden; }
+  .storm-card h2 { font: 700 2rem/1.05 var(--heading-font); margin: 8px 0; }
+  .storm-badge { display: inline-block; border: 1px solid var(--hazard); color: var(--hazard); padding: 4px 8px; font-size: .75rem; font-weight: 700; }
+  .storm-meta { display: flex; flex-wrap: wrap; gap: 9px 18px; margin: 17px 0; color: var(--muted); font-size: .9rem; }
+  .storm-strength { font: 700 3rem/.95 var(--heading-font); color: var(--hazard); }
+  .storm-choices { display: grid; gap: 12px; }
+  .choice { border: 1px solid var(--line); background: #171C1F; padding: 17px; }
+  .choice h3 { font: 700 1.3rem var(--heading-font); margin: 0 0 5px; }
+  .choice p { margin: 0 0 13px; color: var(--muted); font-size: .9rem; }
+  .choice .button { width: 100%; }
+  .storm-scene { position: relative; overflow: hidden; }
+  .storm-scene.arriving::before { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: rgba(156,118,55,.13); animation: sky-tint 1.15s ease-out both; }
+  .storm-scene.arriving::after { content: ""; position: absolute; z-index: 4; pointer-events: none; top: 0; left: -35%; width: 170%; height: 100%; background: repeating-linear-gradient(168deg, transparent 0 26px, rgba(242,194,48,.8) 27px 29px, transparent 30px 55px); opacity: 0; animation: particle-arrival 1.2s ease-out both; }
+  .storm-scene.arriving .shield-flash { animation: shield-flash .8s ease-out 1; }
+  @keyframes sky-tint { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: .25; } }
+  @keyframes particle-arrival { 0% { transform: translateX(-15%) translateY(-20%); opacity: 0; } 25% { opacity: .9; } 100% { transform: translateX(18%) translateY(12%); opacity: 0; } }
+  @keyframes shield-flash { 0%,100% { opacity: 1; } 35% { opacity: .25; } 60% { opacity: 1; } }
+
+  .result-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin: 22px 0; }
+  .result-line { padding: 13px 14px; border: 1px solid var(--line); background: #151A1C; }
+  .result-line strong { display: block; font-size: .9rem; }
+  .result-line span { display: block; color: var(--muted); font-size: .88rem; margin-top: 3px; }
+  .result-line b { color: var(--hazard); }
+  .result-note { border-left: 3px solid var(--gold); background: var(--panel); padding: 13px 16px; margin: 15px 0; }
+  .result-note p { margin: 0; }
+  .learn-layout { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(290px,.95fr); gap: 24px; align-items: start; }
+  .learn-main { min-width: 0; }
+  .quick-points { list-style: none; padding: 0; margin: 18px 0 22px; }
+  .quick-points li { display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--line); padding: 13px 0; }
+  .quick-points svg { width: 30px; height: 30px; flex: 0 0 30px; color: var(--gold); }
+  .quick-points p { margin: 0; }
+  .deep-dive { border-top: 1px solid var(--line); padding-top: 15px; margin-top: 15px; }
+  .deep-dive h3, .myth-strip h3 { font: 700 1.2rem var(--heading-font); margin: 0 0 8px; }
+  .deep-dive p { color: var(--muted); margin: 0 0 12px; }
+  .deep-illustration { width: 100%; height: auto; display: block; background: #101416; border: 1px solid #41484B; margin: 14px 0; }
+  .sources { font-size: .82rem; color: var(--gold) !important; }
+  .myth-strip { margin-top: 22px; padding: 15px; border-left: 3px solid var(--hazard); background: #171C1F; }
+  .myth-strip p { margin: 7px 0 0; color: var(--muted); }
+  .myth-strip strong { color: var(--habitat); }
+  .real-science { border-top: 1px solid var(--line); padding: 12px 0; margin-top: 16px; font-size: .9rem; color: var(--muted); }
+  .learn-side { border: 1px solid var(--line); padding: 18px; background: #121719; }
+  .learn-side h3 { font: 700 1.2rem var(--heading-font); margin: 0 0 7px; }
+  .learn-side p { color: var(--muted); margin: 0 0 15px; font-size: .9rem; }
+  .learn-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+
+  .debrief-summary { padding: 20px; border: 1px solid var(--gold); background: #171C1F; margin: 18px 0; }
+  .debrief-summary h2 { font: 700 1.8rem var(--heading-font); margin: 0 0 5px; }
+  .debrief-summary p { color: var(--muted); margin: 0; }
+  .log-table, .data-table { width: 100%; border-collapse: collapse; margin: 16px 0 26px; font-size: .9rem; }
+  .log-table th, .log-table td, .data-table th, .data-table td { border-bottom: 1px solid var(--line); padding: 10px 9px; text-align: left; vertical-align: top; }
+  .log-table th, .data-table th { color: var(--gold); font-weight: 700; }
+  .unlocked-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 22px; }
+  .unlocked-tag { border: 1px solid var(--line); padding: 6px 10px; font-size: .85rem; }
+  .about-section { border-top: 1px solid var(--line); padding: 20px 0; }
+  .about-section h2 { font: 700 1.45rem var(--heading-font); margin: 0 0 9px; }
+  .about-section p { color: var(--muted); max-width: 850px; }
+  .about-section ul { color: var(--muted); }
+  .credit-note { color: var(--gold) !important; font-size: .9rem; }
+
+  .dialog-backdrop { position: fixed; inset: 0; z-index: 20; background: rgba(0,0,0,.78); display: grid; place-items: center; padding: 20px; }
+  .definition-dialog { width: min(430px, 100%); background: var(--habitat); color: var(--space-black); padding: 22px; border: 3px solid var(--gold); }
+  .definition-dialog h2 { font: 700 1.55rem var(--heading-font); margin: 0 0 7px; }
+  .definition-dialog p { margin: 0 0 18px; }
+  .definition-dialog .button { background: var(--space-black); color: var(--habitat); border-color: var(--space-black); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  @media (max-width: 900px) {
+    .game-grid { grid-template-columns: 1fr; }
+    .scene-wrap { order: 0; }
+    .console { order: 1; }
+    .title-layout { grid-template-columns: 1fr; gap: 8px; }
+    .title-art { max-width: 430px; }
+    .title-copy { padding-bottom: 0; }
+    .briefing-layout, .storm-layout, .learn-layout { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    .shell { width: min(100% - 28px, 1280px); }
+    main { padding-top: 20px; }
+    .topbar { min-height: 65px; gap: 8px; }
+    .brand { min-width: 0; gap: 7px; }
+    .brand-name { font-size: 1.1rem; }
+    .brand-mark { width: 27px; height: 27px; }
+    .topbar-right { gap: 9px; }
+    .difficulty-pill { display: none; }
+    .day-tracker { gap: 3px; }
+    .day-dot { width: 10px; height: 6px; }
+    .tracker-label { display: none; }
+    .about-link { font-size: .85rem; }
+    .title-wordmark { font-size: clamp(3.2rem, 17vw, 5rem); }
+    .title-layout { min-height: auto; }
+    .title-art { max-width: 360px; }
+    .meters { gap: 13px 10px; }
+    .meter-top { font-size: .82rem; }
+    .action-button { grid-template-columns: 31px minmax(0,1fr); }
+    .chips { grid-column: 2; justify-content: flex-start; }
+    .queue-slots { gap: 5px; }
+    .queue-slot { padding: 7px 5px; font-size: .75rem; }
+    .result-grid { grid-template-columns: 1fr; }
+    .scene-caption { flex-direction: column; gap: 2px; }
+    .log-table { font-size: .78rem; }
+    .log-table th, .log-table td { padding: 7px 5px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" role="img" aria-label="Crescent Moon mark">
+        <path d="M28 5A16 16 0 1 0 35 29A13 13 0 0 1 28 5Z" fill="#F2C230" stroke="#E6E3DC" stroke-width="1.5"/>
+      </svg>
+      <div class="brand-name" id="brandName">Storm or Shine</div>
+    </div>
+    <div class="topbar-right" id="topbarRight"></div>
+  </header>
+  <main id="app" aria-live="off"></main>
+  <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+</div>
+<div id="dialogRoot"></div>
+
+<script>
+  // -------------------- GAME SETTINGS --------------------
+  const GAME_TITLE = 'Storm or Shine';
+  const TAGLINE = 'Hide from the storm, or keep the base shining?';
+  const DAYS = 10;
+  const SLOTS_PER_DAY = 3;
+  const SHELTER_DIVISOR = 3;
+  let USING_REAL_DATA = false; // Switches to true automatically when real NASA DONKI records are loaded.
+  const NASA_KEY = 'QzhnjGpgWz6mRw9hQpQkJKKcDbD8WptwzBgf9HTC'; // Free key from api.nasa.gov.
+
+  // -------------------- REAL NASA DATA SETTINGS (added) --------------------
+  // Storm cards are built from REAL NASA DONKI records of these past, very active periods.
+  // type = which DONKI list to ask for: FLR (flares), CME (coronal mass ejections), SEP (particle events).
+  const DONKI_REQUESTS = [
+    { type: 'FLR', start: '2024-05-08', end: '2024-05-14' },
+    { type: 'FLR', start: '2024-10-01', end: '2024-10-05' },
+    { type: 'CME', start: '2024-05-01', end: '2024-05-31' },
+    { type: 'SEP', start: '2024-05-01', end: '2024-10-31' }
+  ];
+  const MIN_REAL_STORMS = 8;                          // Fewer real events than this: keep the sample events.
+  const MAX_PER_TYPE = { flare: 5, CME: 4, SEP: 3 };  // At most 12 real storm cards.
+  const STORM_CACHE_KEY = 'stormOrShine.donki.v1';    // Saves the records in the browser so NASA is not asked every visit.
+  const STORM_CACHE_HOURS = 24;
+  // Optional backup: paste real events saved by your Python script (data/candidates.json) between the brackets.
+  // They are used only if NASA cannot be reached. Each needs: id, donkiId, type, date, sizeNote, strength, warningDays, source.
+  const ARCHIVED_STORMS = [];
+  const OSDR_LOOKUP = true;                           // Shows one related NASA OSDR study title on each learning card (if found).
+  const OSDR_REPOSITORY_URL = 'https://osdr.nasa.gov/bio/repo/';
+  let stormDataMessage = 'Checking for real NASA storm records…';
+  const OSDR_RELATED = {};                            // Filled automatically: { SEP: { id, title }, flare: {...}, CME: {...} }
+
+  const CONFIG = {
+    start: { power: 6, oxygen: 6, shield: 4, dose: 0, science: 0, harvest: 0 },
+    doseLimit: { pilot: 12, cadet: 16 },
+    goals: { science: 6, harvest: 4 },
+    solarIncome: 4,
+    noSolarDays: [6, 7, 8]
+  };
+
+  // SAMPLE records only. Replace this array with archived DONKI records later.
+  // Each record follows the same shape so the game logic does not need to change.
+  const STORMS = [
+    { id: 'SAMPLE-01', donkiId: null, type: 'SEP', date: null, sizeNote: 'Fast particle event', strength: 3, warningDays: 1, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-02', donkiId: null, type: 'flare', date: null, sizeNote: 'Bright solar flare', strength: 2, warningDays: 0, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-03', donkiId: null, type: 'CME', date: null, sizeNote: 'Cloud of charged gas', strength: 4, warningDays: 2, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-04', donkiId: null, type: 'SEP', date: null, sizeNote: 'Fast particle event', strength: 5, warningDays: 1, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-05', donkiId: null, type: 'CME', date: null, sizeNote: 'Cloud of charged gas', strength: 2, warningDays: 2, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-06', donkiId: null, type: 'flare', date: null, sizeNote: 'Bright solar flare', strength: 3, warningDays: 0, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-07', donkiId: null, type: 'SEP', date: null, sizeNote: 'Fast particle event', strength: 4, warningDays: 2, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-08', donkiId: null, type: 'CME', date: null, sizeNote: 'Cloud of charged gas', strength: 5, warningDays: 1, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-09', donkiId: null, type: 'flare', date: null, sizeNote: 'Bright solar flare', strength: 1, warningDays: 0, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-10', donkiId: null, type: 'CME', date: null, sizeNote: 'Cloud of charged gas', strength: 3, warningDays: 2, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-11', donkiId: null, type: 'SEP', date: null, sizeNote: 'Fast particle event', strength: 2, warningDays: 1, source: 'Sample event — illustrative data' },
+    { id: 'SAMPLE-12', donkiId: null, type: 'flare', date: null, sizeNote: 'Bright solar flare', strength: 4, warningDays: 0, source: 'Sample event — illustrative data' }
+  ];
+
+  const ACTIONS = {
+    oxygen: { name: 'Run oxygen generator', short: 'Oxygen generator', icon: 'oxygen', power: -2, oxygen: 3, shield: 0, science: 0, harvest: 0, description: 'Restore the crew’s air supply.' },
+    greenhouse: { name: 'Run greenhouse', short: 'Greenhouse', icon: 'plant', power: -2, oxygen: 0, shield: 0, science: 0, harvest: 2, description: 'Grow food for the crew.' },
+    shield: { name: 'Reinforce shielding', short: 'Shielding', icon: 'shield', power: -2, oxygen: 0, shield: 2, science: 0, harvest: 0, description: 'Add another layer of protection.' },
+    science: { name: 'Do science', short: 'Science lab', icon: 'science', power: -2, oxygen: -1, shield: 0, science: 2, harvest: 0, description: 'Use the lab and its equipment.' },
+    rest: { name: 'Rest and recharge', short: 'Battery bay', icon: 'battery', power: 1, oxygen: 0, shield: 0, science: 0, harvest: 0, description: 'Recharge a little. Uses one slot.' }
+  };
+
+  const MYTHS = [
+    { myth: 'Thicker metal walls always make a base safer.', real: 'Very fast space particles can break up inside metal and make extra radiation; water or plastic often protect better for the same weight.' },
+    { myth: 'A solar storm hits instantly.', real: 'Flare light takes about 8 minutes, particles take minutes to hours, and CME clouds take a day or more.' },
+    { myth: 'The Moon is always freezing.', real: 'It swings from very hot in sunlight to extremely cold at night.' }
+  ];
+
+  const REAL_SCIENCE = []; // Add { topic, text, source, studyId } records when verified data is ready.
+  const RADLAB_FACT = null; // Optional: { text, instrument, dateRange, mSvPerDay }.
+  const FOOD_CARD = null; // Author: add 3 Quick Points and a Deep Dive from the Canadian Space Agency food toolkit.
+
+  const LEARN_CARDS = {
+    SEP: {
+      title: 'Solar energetic particles', label: 'SEP event',
+      quick: [
+        ['sun', 'The Sun sometimes shoots out tiny, super-fast particles.'],
+        ['moon', 'Moon has no air or magnetic shield to stop them.'],
+        ['shield', 'The crew hides in a shelter.'],
+        ['timer', 'Hiding is safe, but no work gets done.']
+      ],
+      deep: 'Solar energetic particle (SEP) events consist mainly of protons, with some heavier ions and electrons, accelerated to high energies by solar flares and by the shock waves that drive coronal mass ejections. They can reach the Earth-Moon system within minutes to a few hours, leaving little warning. Earth’s magnetosphere deflects many of these particles and its atmosphere absorbs most of the rest, so people on the ground receive almost no dose except in the most extreme events. The Moon has no global magnetic field and no meaningful atmosphere, so an unshielded crew on the surface is directly exposed. NOAA rates these events on its S-scale (S1-S5) by the flux of protons above 10 MeV. SEPs are less penetrating than galactic cosmic rays, so shielding is effective against them; hydrogen-rich materials such as water and polyethylene are efficient per unit mass. In August 1972, a major event occurred between Apollo 16 and Apollo 17. No crew was exposed, but later analyses suggest the dose could have been serious.',
+      illustration: 'sep', sources: 'NOAA Space Weather Prediction Center, “Space Weather Scales”; NASA DONKI SEP records.'
+    },
+    flare: {
+      title: 'Solar flares', label: 'Flare',
+      quick: [
+        ['sun', 'A solar flare is a sudden burst of light and X-rays.'],
+        ['signal', 'Its light reaches the Moon in about 8 minutes.'],
+        ['radio', 'Flares can disrupt radio signals.'],
+        ['ladder', 'Flare classes run from A through X.']
+      ],
+      deep: 'A solar flare is a sudden burst of light and X-rays from the Sun. The flare’s light and X-rays travel at the speed of light, reaching Earth or the Moon in about 8 minutes. That means there is no useful warning before the light arrives. Flares are grouped into classes named A, B, C, M and X. Each class is ten times stronger than the class before it, so the letters describe a clear scale of increasing strength. A flare can disrupt radio communication and mark an active region on the Sun. A flare is not the same thing as a coronal mass ejection: one is a sudden burst of radiation, while the other is a huge cloud of charged gas. In this mission, the strength number is a simplified game value, not an official flare class. The crew must use the information available to them and decide how to protect the base while keeping essential work going.',
+      illustration: 'flare', sources: 'NASA DONKI solar flare records.'
+    },
+    CME: {
+      title: 'Coronal mass ejections', label: 'CME',
+      quick: [
+        ['cloud', 'A CME is a huge cloud of charged gas from the Sun.'],
+        ['clock', 'It can take hours or days to arrive.'],
+        ['storm', 'A CME can drive a major solar storm.'],
+        ['particles', 'It can also help speed up particles.']
+      ],
+      deep: 'A coronal mass ejection, or CME, is a huge cloud of charged gas thrown out by the Sun. Unlike the light from a solar flare, a CME does not reach the Earth-Moon system at the speed of light. It takes roughly 15 hours to several days to arrive. That longer travel time can give a crew more warning than a flare does. When a CME reaches its destination, it can drive a major solar storm. It can also help accelerate particles, which may add to the radiation environment around the Moon. A CME and a solar flare can happen in the same active region, but they are different events and travel in different ways. The mission’s forecast gives the crew a chance to prepare before the cloud arrives. The strength numbers in this game are simplified values for play; they are not an official measurement scale for CMEs. These facts help explain why a forecast can matter to a crew planning its next steps.',
+      illustration: 'timeline', sources: 'NASA DONKI coronal mass ejection records.'
+    },
+    DELAY: {
+      title: 'Why crews make decisions on their own', label: 'Communication delay',
+      quick: [
+        ['signal', 'Messages travel at the speed of light.'],
+        ['moon', 'A message takes about 1.3 seconds to reach the Moon.'],
+        ['mars', 'A Mars reply can take 6 to 44 minutes.'],
+        ['crew', 'Crews need autonomy when answers take time.']
+      ],
+      deep: 'Signals travel at the speed of light, but that does not make communication instant across space. A signal takes about 1.3 seconds to travel one way between Earth and the Moon. Mars is much farther away: a one-way signal can take about 3 to 22 minutes. That means an answer sent from Earth can take 6 to 44 minutes to reach a crew on Mars and for a reply to return. At times, Mars is behind the Sun and communication is limited for about two weeks. Crews therefore need autonomy: the ability to make decisions and act without waiting for instructions from Earth. A mission plan can prepare people for known risks, but a crew still needs to respond to the situation in front of them. This is why the Moon-base team in this game must make its own choices about power, supplies, science and shelter.',
+      illustration: 'delay', sources: 'Communication-delay facts supplied in the mission brief.'
+    }
+  };
+
+  const DEFINITIONS = {
+    'Power': 'Electricity the base uses to run its machines and equipment.',
+    'Oxygen': 'The gas people need to breathe.',
+    'Shielding': 'Material around a place that helps protect people from radiation.',
+    'Crew Dose': 'A measure of radiation received by the crew in this game.',
+    'Radiation': 'Energy that travels as waves or particles.',
+    'Solar storm': 'A disturbance from the Sun that can affect space around it.',
+    'Shelter': 'A protected room where the crew can wait out a storm.'
+  };
+
+  // -------------------- GAME STATE --------------------
+  let state = {};
+  let selectedDifficulty = 'cadet';
+  let actionMessage = '';
+  let liveDataMessage = 'Checking NASA DONKI…';
+  let liveDataDetail = '';
+  let dialogReturnFocus = null;
+
+  function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+
+  function shuffle(items) {
+    const copy = items.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function resetGame() {
+    const shuffled = shuffle(STORMS);
+    const missionStorms = [];
+    for (let i = 0; i < DAYS; i++) missionStorms.push(shuffled[i % shuffled.length]);
+    state = {
+      screen: 'title', difficulty: selectedDifficulty, day: 1,
+      meters: { ...CONFIG.start }, queue: [], storms: missionStorms,
+      currentStorm: null, currentCard: null, learnReturn: 'result',
+      lastChoice: null, lastResult: null, log: [], unlocked: [],
+      missionEnd: null, stormArriving: false, crewSheltered: false,
+      learnDeep: false, briefingFromDelay: false
+    };
+    actionMessage = '';
+    render();
+  }
+
+  function doseLimit() { return CONFIG.doseLimit[state.difficulty]; }
+  function stormStrength(storm) {
+    return state.difficulty === 'cadet' ? Math.max(1, storm.strength - 1) : storm.strength;
+  }
+  function stormWarning(storm) {
+    return state.difficulty === 'cadet' ? storm.warningDays + 1 : storm.warningDays;
+  }
+  function isNightDay(day) { return CONFIG.noSolarDays.includes(day); }
+
+  function startBriefing() {
+    state.screen = 'briefing';
+    render();
+  }
+
+  function startMission() {
+    state.difficulty = selectedDifficulty;
+    state.screen = 'day';
+    state.day = 1;
+    state.meters = { ...CONFIG.start };
+    state.queue = [];
+    state.log = [];
+    state.unlocked = [];
+    state.missionEnd = null;
+    render();
+    announce('Mission started. Day 1 of 10.');
+  }
+
+  // Queue an action only. Its effects are previewed, not applied yet.
+  function applyAction(name) {
+    if (!ACTIONS[name] || state.screen !== 'day') return;
+    if (state.queue.length >= SLOTS_PER_DAY) {
+      actionMessage = 'All three action slots are full. Remove one to make room.';
+      render();
+      return;
+    }
+    let previewPower = state.meters.power;
+    for (const queuedName of state.queue) {
+      previewPower = clamp(previewPower + ACTIONS[queuedName].power, 0, 10);
+    }
+    const nextPower = clamp(previewPower + ACTIONS[name].power, 0, 10);
+    if (nextPower < 0 || (ACTIONS[name].power < 0 && previewPower < Math.abs(ACTIONS[name].power))) {
+      actionMessage = 'Not enough Power for that action. Try resting or choose a different job.';
+      render();
+      return;
+    }
+    state.queue.push(name);
+    actionMessage = ACTIONS[name].name + ' added to the plan.';
+    render();
+    announce(actionMessage);
+  }
+
+  function removeQueuedAction(index) {
+    if (index < 0 || index >= state.queue.length) return;
+    const removed = ACTIONS[state.queue[index]].name;
+    state.queue.splice(index, 1);
+    actionMessage = removed + ' removed from the plan.';
+    render();
+    announce(actionMessage);
+  }
+
+  function getPreviewMeters() {
+    const preview = { ...state.meters };
+    state.queue.forEach(function(name) {
+      const action = ACTIONS[name];
+      preview.power = clamp(preview.power + action.power, 0, 10);
+      preview.oxygen = clamp(preview.oxygen + action.oxygen, 0, 10);
+      preview.shield = clamp(preview.shield + action.shield, 0, 10);
+      preview.science += action.science;
+      preview.harvest += action.harvest;
+    });
+    return preview;
+  }
+
+  function endDay() {
+    if (state.screen !== 'day') return;
+    state.queueBeforeStorm = state.queue.slice();
+    drawStorm();
+  }
+
+  function drawStorm() {
+    state.currentStorm = state.storms[state.day - 1];
+    state.screen = 'storm';
+    state.stormArriving = true;
+    render();
+    window.setTimeout(function() {
+      state.stormArriving = false;
+      const scene = document.querySelector('.storm-scene');
+      if (scene) scene.classList.remove('arriving');
+    }, 1350);
+    announce('Storm alert. Choose whether to keep working or shelter.');
+  }
+
+  // Apply one queued job to the live meters.
+  function performAction(name) {
+    const action = ACTIONS[name];
+    state.meters.power = clamp(state.meters.power + action.power, 0, 10);
+    state.meters.oxygen = clamp(state.meters.oxygen + action.oxygen, 0, 10);
+    state.meters.shield = clamp(state.meters.shield + action.shield, 0, 10);
+    state.meters.science += action.science;
+    state.meters.harvest += action.harvest;
+  }
+
+  function resolveStorm(choice) {
+    if (state.screen !== 'storm') return;
+    const before = { ...state.meters };
+    const queuedNames = state.queue.slice();
+    const strength = stormStrength(state.currentStorm);
+    let doseTaken = 0;
+    let workDone = [];
+
+    if (choice === 'work') {
+      queuedNames.forEach(function(name) {
+        performAction(name);
+        workDone.push(ACTIONS[name].name);
+      });
+      doseTaken = Math.max(0, strength * 2 - state.meters.shield);
+      state.crewSheltered = false;
+    } else {
+      doseTaken = Math.ceil(Math.max(0, strength * 2 - state.meters.shield) / SHELTER_DIVISOR);
+      state.crewSheltered = true;
+    }
+
+    state.meters.dose += doseTaken;
+    state.queue = [];
+    const doseAfterStorm = state.meters.dose;
+    state.meters.oxygen = clamp(state.meters.oxygen - 1, 0, 10);
+    const solarGain = isNightDay(state.day) ? 0 : CONFIG.solarIncome;
+    state.meters.power = clamp(state.meters.power + solarGain, 0, 10);
+
+    const after = { ...state.meters };
+    let reason = '';
+    if (state.meters.oxygen <= 0) {
+      reason = 'Oxygen ran out on day ' + state.day + '. The daily oxygen use reduced the supply to zero. Run the oxygen generator before ending a day to keep the crew supplied.';
+    } else if (state.meters.dose > doseLimit()) {
+      reason = 'Crew Dose passed the ' + doseLimit() + ' point mission limit on day ' + state.day + '.';
+    }
+
+    state.lastChoice = choice;
+    state.lastResult = {
+      before: before, after: after, doseTaken: doseTaken,
+      doseAfterStorm: doseAfterStorm, solarGain: solarGain,
+      strength: strength, queuedNames: queuedNames,
+      workDone: workDone, choice: choice, day: state.day
+    };
+    state.log.push({ day: state.day, type: state.currentStorm.type, choice: choice, dose: doseTaken, power: after.power, oxygen: after.oxygen, note: choice === 'shelter' ? 'Queued work was discarded.' : workDone.length + ' job(s) completed.' });
+    if (!state.unlocked.includes(state.currentStorm.type)) state.unlocked.push(state.currentStorm.type);
+
+    if (reason) state.missionEnd = { type: 'early', reason: reason };
+    else if (state.day >= DAYS) state.missionEnd = { type: 'complete', reason: '' };
+    else state.missionEnd = null;
+
+    state.screen = 'result';
+    render();
+    announce('Day ' + state.day + ' result. Crew Dose increased by ' + doseTaken + '.');
+  }
+
+  function continueFromResult() {
+    state.currentCard = state.currentStorm.type;
+    state.learnReturn = 'result';
+    state.learnDeep = false;
+    showCard(state.currentCard, 'result');
+  }
+
+  function showCard(id, returnTo) {
+    if (!LEARN_CARDS[id]) return;
+    state.currentCard = id;
+    state.learnReturn = returnTo || 'result';
+    state.learnDeep = false;
+    if (!state.unlocked.includes(id)) state.unlocked.push(id);
+    state.screen = 'learn';
+    render();
+  }
+
+  function toggleDeepDive() {
+    state.learnDeep = !state.learnDeep;
+    render();
+    const button = document.getElementById('deepDiveToggle');
+    if (button) button.focus();
+  }
+
+  function nextDay() {
+    if (state.learnReturn === 'briefing') {
+      state.screen = 'briefing';
+      render();
+      return;
+    }
+    if (state.missionEnd) {
+      state.screen = 'debrief';
+      render();
+      return;
+    }
+    state.day += 1;
+    state.queue = [];
+    state.crewSheltered = false;
+    state.screen = 'day';
+    actionMessage = '';
+    render();
+    announce('Day ' + state.day + ' of ' + DAYS + '. Plan up to three actions.');
+  }
+
+  function openDefinition(word) {
+    let meaning = DEFINITIONS[word];
+    if (!meaning) return;
+    if (word === 'Crew Dose' && RADLAB_FACT) meaning += ' ' + RADLAB_FACT.text + ' Instrument: ' + RADLAB_FACT.instrument + '. Date range: ' + RADLAB_FACT.dateRange + '. Dose: ' + RADLAB_FACT.mSvPerDay + ' mSv per day.';
+    dialogReturnFocus = document.activeElement;
+    document.getElementById('dialogRoot').innerHTML = `
+      <div class="dialog-backdrop" onclick="closeDefinition(event)">
+        <section class="definition-dialog" role="dialog" aria-modal="true" aria-labelledby="definitionTitle" onclick="event.stopPropagation()">
+          <h2 id="definitionTitle">${word}</h2>
+          <p>${meaning}</p>
+          <button class="button" onclick="closeDefinition()">Close</button>
+        </section>
+      </div>`;
+    document.querySelector('.definition-dialog button').focus();
+  }
+
+  function closeDefinition(event) {
+    if (event && event.target !== event.currentTarget) return;
+    document.getElementById('dialogRoot').innerHTML = '';
+    if (dialogReturnFocus && dialogReturnFocus.focus) dialogReturnFocus.focus();
+  }
+
+  function openAbout() {
+    state.previousScreen = state.screen;
+    state.screen = 'about';
+    render();
+  }
+
+  function closeAbout() {
+    state.screen = state.previousScreen || 'title';
+    render();
+  }
+
+  function goHome() {
+    selectedDifficulty = state.difficulty || selectedDifficulty;
+    resetGame();
+  }
+
+  function finishDebrief() {
+    state.screen = 'debrief';
+    render();
+  }
+
+  function announce(message) {
+    const announcer = document.getElementById('announcer');
+    if (announcer) announcer.textContent = message;
+  }
+
+  // -------------------- INLINE SVG ICONS --------------------
+  function icon(name, className) {
+    const common = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+    const paths = {
+      oxygen: `<path ${common} d="M12 2v4M8 6h8v15H8zM10 10h4M10 14h4M10 18h4"/><path ${common} d="M8 3h8"/>`,
+      plant: `<path ${common} d="M12 21V11M12 14C5 14 4 8 4 5c6 0 9 3 8 9ZM12 12c0-6 4-9 8-9 0 5-2 10-8 10"/><path ${common} d="M6 21h12"/>`,
+      shield: `<path ${common} d="M12 2 20 5v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path ${common} d="m8 12 2.5 2.5L16 9"/>`,
+      science: `<path ${common} d="M9 3h6M10 3v7l-5 8a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-8V3"/><path ${common} d="M7 16h10M9 13h6"/>`,
+      battery: `<rect ${common} x="3" y="7" width="17" height="12" rx="1"/><path ${common} d="M20 11h2v4h-2M11 9l-3 5h4l-2 3"/>`,
+      sun: `<circle ${common} cx="12" cy="12" r="4"/><path ${common} d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M1 12h3m16 0h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>`,
+      moon: `<path ${common} d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/>`,
+      timer: `<circle ${common} cx="12" cy="13" r="8"/><path ${common} d="M12 9v4l3 2M9 2h6M12 2v3"/>`,
+      signal: `<path ${common} d="M3 17a13 13 0 0 1 18 0M6 14a9 9 0 0 1 12 0M9 11a5 5 0 0 1 6 0M12 19h.01"/>`,
+      radio: `<path ${common} d="M4 8h16v12H4zM7 4l10 4M7 12h5M7 16h.01M16 12h1"/>`,
+      cloud: `<path ${common} d="M6 18a4 4 0 0 1-.3-8A6.5 6.5 0 0 1 18 9a4.5 4.5 0 0 1 0 9z"/>`,
+      clock: `<circle ${common} cx="12" cy="12" r="9"/><path ${common} d="M12 7v5l3 2"/>`,
+      storm: `<path ${common} d="M5 17a4 4 0 0 1 0-8 7 7 0 0 1 13-1 4.5 4.5 0 0 1 1 9"/><path ${common} d="m13 12-3 5h3l-1 4 4-6h-3l1-3"/>`,
+      particles: `<circle ${common} cx="6" cy="7" r="2"/><circle ${common} cx="17" cy="5" r="1.5"/><circle ${common} cx="15" cy="17" r="2"/><path ${common} d="m8 8 5 6m-4-7 6-1m1 9-4 1"/>`,
+      crew: `<circle ${common} cx="12" cy="7" r="4"/><path ${common} d="M4 21a8 8 0 0 1 16 0"/>`
+    };
+    return `<svg class="${className || ''}" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.sun}</svg>`;
+  }
+
+  function stormIcon(type, size) {
+    const w = size || 42;
+    if (type === 'flare') return `<svg width="${w}" height="${w}" viewBox="0 0 48 48" role="img" aria-label="Solar flare icon"><circle cx="22" cy="25" r="8" fill="#F2C230" stroke="#E6E3DC" stroke-width="2"/><path d="M22 3v8M22 39v6M2 25h8M34 25h10M7 10l6 6m18 18 6 6m0-30-6 6M13 34l-6 6" stroke="#F2C230" stroke-width="2.5"/><path d="M29 13q10-8 13-6" stroke="#E6E3DC" fill="none" stroke-width="2"/></svg>`;
+    if (type === 'CME') return `<svg width="${w}" height="${w}" viewBox="0 0 48 48" role="img" aria-label="Coronal mass ejection icon"><circle cx="13" cy="25" r="8" fill="#F2C230" stroke="#E6E3DC" stroke-width="2"/><path d="M23 13q12-10 18 2M22 21q15-5 20 8M22 29q12 8 17 5" stroke="#C9A24A" fill="none" stroke-width="3" stroke-linecap="round"/><circle cx="34" cy="13" r="2" fill="#E6E3DC"/><circle cx="39" cy="28" r="2" fill="#E6E3DC"/></svg>`;
+    return `<svg width="${w}" height="${w}" viewBox="0 0 48 48" role="img" aria-label="Solar energetic particles icon"><circle cx="11" cy="24" r="7" fill="#F2C230" stroke="#E6E3DC" stroke-width="2"/><path d="M21 13 42 6M21 22l23-2M21 30l20 7" stroke="#E6E3DC" stroke-width="2.5" stroke-linecap="round"/><circle cx="29" cy="11" r="2" fill="#C9A24A"/><circle cx="35" cy="21" r="2" fill="#C9A24A"/><circle cx="29" cy="34" r="2" fill="#C9A24A"/></svg>`;
+  }
+
+  function baseScene(preview) {
+    const meters = preview || state.meters;
+    const shieldLayers = Array.from({ length: clamp(Math.round(meters.shield), 0, 10) }, function(_, i) {
+      return `<path d="M360 ${168 - i * 5}h245" stroke="#C9A24A" stroke-width="3"/>`;
+    }).join('');
+    const oxygenHeight = Math.max(0, meters.oxygen) * 4.2;
+    const crewClass = state.crewSheltered ? 'crew in-shelter' : 'crew';
+    const night = isNightDay(state.day) && state.screen === 'day';
+    const stars = [[80,90],[180,130],[270,72],[390,110],[520,65],[680,100],[820,75],[900,135],[740,160],[120,185]];
+    const starMarkup = stars.map(function(point) { return `<circle cx="${point[0]}" cy="${point[1]}" r="1.7" fill="#E6E3DC" opacity=".8"/>`; }).join('');
+    return `
+    <svg class="base-scene ${night ? 'night-scene' : ''}" viewBox="0 0 960 540" role="img" aria-label="Side cutaway view of a Moon base with solar panels, oxygen tank, greenhouse, science lab, shielding and underground shelter">
+      <rect class="sky" width="960" height="540" fill="#080A0B"/>
+      ${starMarkup}
+      <circle cx="145" cy="235" r="29" fill="#F2C230"/>
+      <!-- Eight evenly spaced Sun rays, all with the same length and stroke. -->
+      <g transform="translate(145 235)" stroke="#C9A24A" stroke-width="3" stroke-linecap="round">
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(0)"/>
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(45)"/>
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(90)"/>
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(135)"/>
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(180)"/>
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(225)"/>
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(270)"/>
+        <line x1="0" y1="-39" x2="0" y2="-51" transform="rotate(315)"/>
+      </g>
+      <path d="M0 330Q120 302 240 325T480 319T720 326T960 311V540H0Z" fill="#77736D"/>
+      <path d="M0 355Q180 330 330 353T650 346T960 342V540H0Z" fill="#9A958E"/>
+      <path d="M0 355Q180 330 330 353T650 346T960 342" fill="none" stroke="#E6E3DC" stroke-width="2" opacity=".35"/>
+      <!-- Solar array -->
+      <g class="solar-array" stroke="#E6E3DC" stroke-width="2">
+        <path d="M70 321 88 265M210 326 195 265" fill="none"/>
+        <path d="M65 263 202 263 214 310 52 310Z" fill="#2B4A8C"/>
+        <path d="M95 264 87 309M128 264 126 309M162 264 166 309M65 286h140" fill="none" stroke="#B9C9E5" stroke-width="1.4"/>
+      </g>
+      <!-- Habitat cutaway -->
+      <path d="M275 240 330 192 635 192 685 240V365H275Z" fill="#E6E3DC" stroke="#080A0B" stroke-width="4"/>
+      <path d="M295 244 339 207H626L665 244V350H295Z" fill="#252B2E" stroke="#080A0B" stroke-width="3"/>
+      <path d="M275 240h410" stroke="#C9A24A" stroke-width="4"/>
+      <g class="module-hit" role="button" tabindex="0" aria-label="Roof shielding. Reinforce shielding." onclick="applyAction('shield')" onkeydown="moduleKey(event,'shield')">${shieldLayers}<path class="module-outline" d="M360 173h245" stroke="#E6E3DC" stroke-width="1.5" fill="none"/><text x="482" y="151" fill="#E6E3DC" font-size="11" text-anchor="middle">SHIELD LAYERS</text></g>
+      <g class="shield-flash"><path d="M360 164h245" stroke="#F2C230" stroke-width="3" opacity=".0"/></g>
+      <!-- Battery bay -->
+      <g class="module-hit" role="button" tabindex="0" aria-label="Battery bay. Rest and recharge. Add this action to the plan." onclick="applyAction('rest')" onkeydown="moduleKey(event,'rest')">
+        <rect class="module-outline" x="309" y="258" width="63" height="79" fill="#343B3E" stroke="#C9A24A" stroke-width="2"/>
+        <rect x="321" y="273" width="39" height="43" fill="#171B1D" stroke="#E6E3DC" stroke-width="2"/>
+        <path d="M333 281h15v26h-15zM337 275h7" fill="#C9A24A" stroke="#C9A24A" stroke-width="2"/>
+        <text x="340" y="330" text-anchor="middle" fill="#E6E3DC" font-size="11">BATTERY</text>
+      </g>
+      <!-- Oxygen tank -->
+      <g class="module-hit" role="button" tabindex="0" aria-label="Oxygen tank. Run oxygen generator." onclick="applyAction('oxygen')" onkeydown="moduleKey(event,'oxygen')">
+        <rect class="module-outline" x="390" y="236" width="52" height="101" rx="16" fill="#A9C9C8" stroke="#080A0B" stroke-width="3"/>
+        <rect x="398" y="244" width="36" height="83" rx="10" fill="#252B2E" stroke="#E6E3DC" stroke-width="1.5"/>
+        <rect x="400" y="${327 - oxygenHeight}" width="32" height="${oxygenHeight}" rx="5" fill="#A9C9C8"/>
+        <path d="M406 229h20v7h-20z" fill="#C9A24A" stroke="#080A0B" stroke-width="2"/>
+        <text x="416" y="350" text-anchor="middle" fill="#E6E3DC" font-size="11">OXYGEN</text>
+      </g>
+      <!-- Greenhouse -->
+      <g class="module-hit" role="button" tabindex="0" aria-label="Greenhouse dome. Run greenhouse." onclick="applyAction('greenhouse')" onkeydown="moduleKey(event,'greenhouse')">
+        <path class="module-outline" d="M458 335a55 55 0 0 1 110 0Z" fill="#A9C9C8" fill-opacity=".2" stroke="#E6E3DC" stroke-width="2.5"/>
+        <path d="M466 330q12-29 25-8M493 333q5-37 16-27M520 333q14-30 29-14" fill="none" stroke="#A8C7A0" stroke-width="4" stroke-linecap="round"/>
+        <path d="M482 337v-17m27 17v-26m28 26v-15" stroke="#A8C7A0" stroke-width="2"/>
+        <text x="513" y="350" text-anchor="middle" fill="#E6E3DC" font-size="11">GROW</text>
+      </g>
+      <!-- Science lab -->
+      <g class="module-hit" role="button" tabindex="0" aria-label="Science lab. Do science." onclick="applyAction('science')" onkeydown="moduleKey(event,'science')">
+        <rect class="module-outline" x="579" y="258" width="74" height="79" fill="#343B3E" stroke="#E6E3DC" stroke-width="2"/>
+        <path d="M587 300h58M595 291v-17h18v17M619 281h17v10" stroke="#C9A24A" stroke-width="2" fill="none"/>
+        <circle cx="605" cy="280" r="5" fill="#A9C9C8" stroke="#E6E3DC" stroke-width="1.5"/>
+        <text x="616" y="330" text-anchor="middle" fill="#E6E3DC" font-size="11">LAB</text>
+      </g>
+      <!-- Power lines -->
+      <path d="M210 308H275M372 290H390M442 290H458M568 290H579" stroke="#C9A24A" stroke-width="3" fill="none"/>
+      <circle cx="275" cy="308" r="4" fill="#F2C230"/><circle cx="390" cy="290" r="4" fill="#F2C230"/><circle cx="458" cy="290" r="4" fill="#F2C230"/><circle cx="579" cy="290" r="4" fill="#F2C230"/>
+      <!-- Crew silhouettes -->
+      <g class="${crewClass}" fill="#080A0B" stroke="#E6E3DC" stroke-width="1.5">
+        <circle cx="708" cy="300" r="10"/><path d="M697 313h22l6 30h-34z"/>
+        <circle cx="741" cy="303" r="9"/><path d="M731 314h20l5 29h-30z"/>
+      </g>
+      <!-- Underground shelter -->
+      <path d="M0 367H960" stroke="#514E49" stroke-width="4"/>
+      <path d="M665 369v-2h160v115H665Z" fill="#55514B" stroke="#080A0B" stroke-width="3"/>
+      <path d="M680 385h130v96H680Z" fill="#252B2E" stroke="#C9A24A" stroke-width="2" stroke-dasharray="7 5"/>
+      <path d="M692 388v80m12-80v80m-12-60h12m-12 20h12m-12 20h12" stroke="#C9A24A" stroke-width="2"/>
+      <text x="755" y="407" fill="#E6E3DC" text-anchor="middle" font-size="12">BURIED SHELTER</text>
+      <g class="${state.crewSheltered ? 'shelter-crew' : 'shelter-crew'}" fill="#E6E3DC" stroke="#080A0B" stroke-width="1.5">
+        ${state.crewSheltered ? '<circle cx="750" cy="443" r="8"/><path d="M740 453h20v19h-20z"/><circle cx="782" cy="443" r="8"/><path d="M772 453h20v19h-20z"/>' : ''}
+      </g>
+      <text x="45" y="405" fill="#E6E3DC" font-size="13" opacity=".8">LUNAR REGOLITH</text>
+      <path d="M42 414h125" stroke="#C9A24A" stroke-width="2"/>
+      <text x="45" y="438" fill="#E6E3DC" font-size="11" opacity=".7">SOUTH POLE OUTPOST</text>
+    </svg>`;
+  }
+
+  function moduleKey(event, action) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      applyAction(action);
+    }
+  }
+
+  // -------------------- PAGE RENDERING --------------------
+  function renderTopbar() {
+    const right = document.getElementById('topbarRight');
+    if (!right) return;
+    if (state.screen === 'day' || state.screen === 'storm' || state.screen === 'result' || state.screen === 'learn') {
+      const dots = Array.from({ length: DAYS }, function(_, i) {
+        let cls = 'day-dot';
+        if (i + 1 < state.day) cls += ' done';
+        if (i + 1 === state.day) cls += ' current';
+        return `<span class="${cls}" aria-hidden="true"></span>`;
+      }).join('');
+      right.innerHTML = `<span class="tracker-label">Mission day</span><div class="day-tracker" aria-label="Day ${state.day} of ${DAYS}">${dots}</div><span class="difficulty-pill">${state.difficulty === 'cadet' ? 'Cadet' : 'Pilot'}</span><button class="about-link" onclick="openAbout()">About</button>`;
+    } else if (state.screen === 'about') {
+      right.innerHTML = `<button class="about-link" onclick="closeAbout()">Back</button>`;
+    } else if (state.screen === 'debrief') {
+      right.innerHTML = `<button class="about-link" onclick="openAbout()">About</button>`;
+    } else {
+      right.innerHTML = `<button class="about-link" onclick="openAbout()">About and data</button>`;
+    }
+  }
+
+  function render() {
+    document.title = GAME_TITLE;
+    document.getElementById('brandName').textContent = GAME_TITLE;
+    renderTopbar();
+    const app = document.getElementById('app');
+    const screens = {
+      title: renderTitle,
+      briefing: renderBriefing,
+      day: renderDay,
+      storm: renderStorm,
+      result: renderResult,
+      learn: renderLearn,
+      debrief: renderDebrief,
+      about: renderAbout
+    };
+    app.innerHTML = (screens[state.screen] || renderTitle)();
+    const heading = app.querySelector('h1');
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    }
+  }
+
+  function renderTitle() {
+    return `
+    <section class="screen title-layout" aria-labelledby="screenTitle">
+      <div class="title-copy">
+        <p class="eyebrow">Junior astronaut mission trainer</p>
+        <h1 class="title-wordmark" id="screenTitle">Storm <span>or</span><br>Shine</h1>
+        <p class="tagline">${TAGLINE}</p>
+        <p class="screen-intro">Command a small Moon base. Balance Power, oxygen, food, science and crew safety across ten mission days.</p>
+        <p><strong>Choose your mission level</strong></p>
+        <div class="difficulty-choice" role="group" aria-label="Choose difficulty">
+          <button class="difficulty-option ${selectedDifficulty === 'cadet' ? 'selected' : ''}" onclick="chooseDifficulty('cadet')" aria-pressed="${selectedDifficulty === 'cadet'}"><strong>Cadet</strong><span>Ages 7–8 · More warning</span></button>
+          <button class="difficulty-option ${selectedDifficulty === 'pilot' ? 'selected' : ''}" onclick="chooseDifficulty('pilot')" aria-pressed="${selectedDifficulty === 'pilot'}"><strong>Pilot</strong><span>Ages 9–12 · Full storm strength</span></button>
+        </div>
+        <div class="title-actions">
+          <button class="button primary" onclick="startBriefing()">Play</button>
+          <button class="text-button" onclick="openAbout()">About and data</button>
+        </div>
+        <div class="live-panel" aria-live="polite">
+          <strong>Space weather right now</strong>
+          <p id="liveDataMessage">${liveDataMessage}</p>
+          ${liveDataDetail ? `<p>${liveDataDetail}</p>` : ''}
+          ${stormDataMessage ? `<p>${stormDataMessage}</p>` : ''}
+        </div>
+        <p class="footer-note">Data: NASA DONKI and NASA OSDR. Not affiliated with or endorsed by NASA.</p>
+      </div>
+      <div class="title-art" aria-hidden="true">${titleIllustration()}</div>
+    </section>`;
+  }
+
+  function chooseDifficulty(level) {
+    selectedDifficulty = level;
+    state.difficulty = level;
+    render();
+  }
+
+  function titleIllustration() {
+    return `<svg viewBox="0 0 520 440" role="img" aria-label="Illustration of a small Moon research base beneath a dark sky">
+      <rect width="520" height="440" fill="#080A0B"/>
+      <circle cx="415" cy="78" r="32" fill="#F2C230"/>
+      <!-- Eight evenly spaced Sun rays, all with the same length and stroke. -->
+      <g transform="translate(415 78)" stroke="#C9A24A" stroke-width="3" stroke-linecap="round">
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(0)"/>
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(45)"/>
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(90)"/>
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(135)"/>
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(180)"/>
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(225)"/>
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(270)"/>
+        <line x1="0" y1="-43" x2="0" y2="-55" transform="rotate(315)"/>
+      </g>
+      <circle cx="82" cy="67" r="2" fill="#E6E3DC"/><circle cx="180" cy="110" r="2" fill="#E6E3DC"/><circle cx="320" cy="48" r="2" fill="#E6E3DC"/><circle cx="470" cy="170" r="2" fill="#E6E3DC"/>
+      <path d="M0 320Q100 280 210 315T520 304V440H0Z" fill="#77736D"/><path d="M0 345Q160 315 300 346T520 330V440H0Z" fill="#9A958E"/>
+      <path d="M135 240 170 207h180l38 33v104H135Z" fill="#E6E3DC" stroke="#080A0B" stroke-width="4"/><path d="M151 244 180 220h159l31 24v83H151Z" fill="#252B2E" stroke="#080A0B" stroke-width="3"/>
+      <path d="M185 209h150" stroke="#C9A24A" stroke-width="4"/><path d="M185 204h150M185 199h150" stroke="#C9A24A" stroke-width="2"/>
+      <rect x="166" y="260" width="36" height="63" fill="#343B3E" stroke="#C9A24A" stroke-width="2"/><rect x="216" y="249" width="28" height="74" rx="9" fill="#A9C9C8" stroke="#080A0B" stroke-width="2"/><path d="M255 319a40 40 0 0 1 80 0Z" fill="#A9C9C8" fill-opacity=".2" stroke="#E6E3DC" stroke-width="2"/><path d="M272 317q10-22 18-8m8 8q6-28 16-18" stroke="#A8C7A0" stroke-width="4" fill="none"/>
+      <path d="M22 306 42 250h105l16 56Z" fill="#2B4A8C" stroke="#E6E3DC" stroke-width="2"/><path d="M65 251 57 305m38-54 1 54m35-54 9 54M28 279h127" stroke="#B9C9E5" stroke-width="1.5"/>
+      <path d="M355 345v-40h105v40" fill="#252B2E" stroke="#C9A24A" stroke-width="2"/><path d="M375 305v-24m25 24v-24m25 24v-24" stroke="#C9A24A" stroke-width="3"/>
+      <path d="M0 345h520" stroke="#E6E3DC" opacity=".35" stroke-width="2"/>
+    </svg>`;
+  }
+
+  function renderBriefing() {
+    return `<section class="screen" aria-labelledby="screenTitle">
+      <p class="eyebrow">Mission briefing</p>
+      <h1 class="screen-heading" id="screenTitle">Every choice uses the same budget.</h1>
+      <p class="screen-intro">Your base has limited Power. Each day, choose what matters most before a solar storm arrives.</p>
+      <div class="briefing-layout">
+        <div>
+          <ol class="briefing-list">
+            <li><p><strong><button class="word" onclick="openDefinition('Power')">Power</button> runs the base.</strong> Generators, the greenhouse, shielding and science all need electricity.</p></li>
+            <li><p><strong><button class="word" onclick="openDefinition('Oxygen')">Oxygen</button> and food keep the crew going.</strong> Watch your supplies as the days pass.</p></li>
+            <li><p><strong><button class="word" onclick="openDefinition('Shielding')">Shielding</button> helps protect the crew.</strong> When a storm arrives, choose whether to keep working or enter the <button class="word" onclick="openDefinition('Shelter')">shelter</button>.</p></li>
+          </ol>
+          <p>Tap these words to learn what they mean: <button class="word" onclick="openDefinition('Crew Dose')">Crew Dose</button>, <button class="word" onclick="openDefinition('Radiation')">Radiation</button> and <button class="word" onclick="openDefinition('Solar storm')">Solar storm</button>.</p>
+          <p><button class="text-button" onclick="showCard('DELAY','briefing')">Why can’t Earth just tell us what to do?</button></p>
+          <button class="button primary" onclick="startMission()">Start mission</button>
+        </div>
+        <aside class="briefing-side">
+          <h2>Your mission goals</h2>
+          <p>Survive all ten days, keep Crew Dose within the mission limit, and meet both science and food goals.</p>
+          <p><strong>Science:</strong> at least ${CONFIG.goals.science}</p>
+          <p><strong>Food harvest:</strong> at least ${CONFIG.goals.harvest}</p>
+          <p><strong>Storm decision:</strong> work to complete queued jobs and take the full dose, or shelter and discard the plan to reduce the dose.</p>
+        </aside>
+      </div>
+    </section>`;
+  }
+
+  function renderForecast() {
+    const known = [];
+    for (let i = state.day; i < DAYS; i++) {
+      const storm = state.storms[i];
+      if (stormWarning(storm) > 0 && (i + 1 - stormWarning(storm)) <= state.day) {
+        known.push({ day: i + 1, storm: storm });
+      }
+    }
+    if (!known.length) return `<span class="forecast-empty">No later storm warnings received yet.</span>`;
+    return known.slice(0, 4).map(function(item) {
+      return `<div class="forecast-item">Day ${item.day}: <strong>${item.storm.type === 'flare' ? 'Flare' : item.storm.type}</strong> · Strength ${stormStrength(item.storm)}</div>`;
+    }).join('');
+  }
+
+  function renderMeters(preview) {
+    const shown = preview || state.meters;
+    const meterInfo = [
+      ['power', 'Power', shown.power, state.meters.power, preview && preview.power !== state.meters.power],
+      ['oxygen', 'Oxygen', shown.oxygen, state.meters.oxygen, preview && preview.oxygen !== state.meters.oxygen],
+      ['shield', 'Shielding', shown.shield, state.meters.shield, preview && preview.shield !== state.meters.shield],
+      ['dose', 'Crew Dose', shown.dose, state.meters.dose, false]
+    ];
+    return meterInfo.map(function(item) {
+      const key = item[0];
+      const val = item[2];
+      const current = item[3];
+      const changed = item[4];
+      const width = key === 'dose' ? Math.min(100, val / doseLimit() * 100) : clamp(val, 0, 10) * 10;
+      const currentWidth = key === 'dose' ? Math.min(100, current / doseLimit() * 100) : clamp(current, 0, 10) * 10;
+      const ghost = changed ? `<span class="meter-ghost" style="left:${Math.min(width,currentWidth)}%;"></span>` : '';
+      let extra = '';
+      if (key === 'dose') extra = `<div class="meter-note">Mission limit: ${doseLimit()} · ${val > doseLimit() ? 'Over limit' : 'Within limit'}</div>`;
+      else if (changed) extra = `<div class="meter-note">Now ${current}; after plan ${val}</div>`;
+      const high = key === 'dose' && val > doseLimit() ? ' critical' : (key === 'dose' && val > doseLimit() * .7 ? ' high' : '');
+      return `<div class="meter ${key === 'dose' ? 'dose-meter' + high : ''}">
+        <div class="meter-top"><span class="meter-name">${item[1]}</span><span class="meter-value">${val}${key === 'dose' ? '' : ' / 10'}</span></div>
+        <div class="meter-track" role="meter" aria-label="${item[1]}" aria-valuemin="0" aria-valuemax="${key === 'dose' ? doseLimit() : 10}" aria-valuenow="${val}"><div class="meter-fill ${key}" style="width:${width}%"></div>${ghost}</div>${extra}
+      </div>`;
+    }).join('');
+  }
+
+  function renderSeesaw(preview) {
+    const shown = preview || state.meters;
+    const angle = clamp((shown.power - shown.shield) * 3, -18, 18);
+    return `<div class="seesaw">
+      <svg viewBox="0 0 320 68" role="img" aria-label="Power and Shielding balance seesaw">
+        <path d="M160 42 139 66h42Z" fill="#9A958E" stroke="#E6E3DC" stroke-width="1.5"/>
+        <g transform="rotate(${angle} 160 42)"><path d="M35 36H285" stroke="#C9A24A" stroke-width="5"/><path d="M55 36v-13h54v13M211 36v-13h54v13" fill="#2B4A8C" stroke="#E6E3DC" stroke-width="1.5"/><text x="82" y="18" fill="#E6E3DC" font-size="10" text-anchor="middle">Power</text><text x="238" y="18" fill="#E6E3DC" font-size="10" text-anchor="middle">Shielding</text></g>
+      </svg>
+      <p class="seesaw-caption">Power and Shielding compete for the same budget.</p>
+    </div>`;
+  }
+
+  function renderActionButton(name) {
+    const action = ACTIONS[name];
+    const powerWord = action.power < 0 ? `− ${Math.abs(action.power)} Power` : `+ ${action.power} Power`;
+    const otherChips = [];
+    if (action.oxygen > 0) otherChips.push(`+ ${action.oxygen} Oxygen`);
+    if (action.oxygen < 0) otherChips.push(`− ${Math.abs(action.oxygen)} Oxygen`);
+    if (action.shield > 0) otherChips.push(`+ ${action.shield} Shielding`);
+    if (action.science > 0) otherChips.push(`+ ${action.science} Science`);
+    if (action.harvest > 0) otherChips.push(`+ ${action.harvest} Harvest`);
+    return `<button class="action-button" onclick="applyAction('${name}')" ${state.queue.length >= SLOTS_PER_DAY ? 'disabled' : ''}>
+      ${icon(action.icon, 'action-icon')}
+      <span><span class="action-name">${action.name}</span><span class="action-desc">${action.description}</span></span>
+      <span class="chips"><span class="chip power">⚡ ${powerWord}</span>${otherChips.map(function(chip) { return `<span class="chip">＋ ${chip}</span>`; }).join('')}</span>
+    </button>`;
+  }
+
+  function renderDay() {
+    const preview = getPreviewMeters();
+    const queueSlots = Array.from({ length: SLOTS_PER_DAY }, function(_, i) {
+      if (state.queue[i]) return `<button class="queue-slot filled" onclick="removeQueuedAction(${i})" aria-label="Remove ${ACTIONS[state.queue[i]].name} from slot ${i + 1}"><span>Slot ${i + 1} · Remove</span>${ACTIONS[state.queue[i]].short}</button>`;
+      return `<div class="queue-slot"><span>Slot ${i + 1}</span>Open slot</div>`;
+    }).join('');
+    return `<section class="screen" aria-labelledby="screenTitle">
+      <div class="game-topline"><div><p class="eyebrow">Mission planning</p><h1 class="screen-heading" id="screenTitle">Day ${state.day} of ${DAYS}</h1></div><div class="difficulty-pill">${state.difficulty === 'cadet' ? 'Cadet mission' : 'Pilot mission'}</div></div>
+      ${isNightDay(state.day) ? '<p class="night-banner">Lunar night: solar panels produce no Power today. Plan with the energy you have.</p>' : ''}
+      <div class="game-grid">
+        <div class="scene-wrap">
+          <span class="scene-label">South pole outpost · cutaway view</span>
+          <div class="forecast-strip" aria-label="Storm forecast">${renderForecast()}</div>
+          ${baseScene(preview)}
+          <div class="scene-caption"><strong>Tap a module to queue its action.</strong><span>Gold lines carry Power around the base.</span></div>
+        </div>
+        <div class="console">
+          <section class="console-section"><h2 class="section-title">Mission meters <small>Current and planned</small></h2><div class="meters">${renderMeters(preview)}</div>${renderSeesaw(preview)}</section>
+          <section class="console-section"><h2 class="section-title">Today's action slots <small>${state.queue.length} of ${SLOTS_PER_DAY} planned</small></h2><div class="queue-slots">${queueSlots}</div></section>
+          <section class="console-section"><h2 class="section-title">Choose a job</h2><div class="action-list">${['oxygen','greenhouse','shield','science','rest'].map(renderActionButton).join('')}</div><p class="action-message" role="status">${actionMessage}</p>
+            <div class="console-bottom"><p>Jobs are only applied if you keep working.</p><button class="button primary" onclick="endDay()">End day</button></div>
+          </section>
+        </div>
+      </div>
+    </section>`;
+  }
+
+  function renderStorm() {
+    const storm = state.currentStorm;
+    const strength = stormStrength(storm);
+    const fullDose = Math.max(0, strength * 2 - state.meters.shield);
+    const shelterDose = Math.ceil(fullDose / SHELTER_DIVISOR);
+    const isArchivedRecord = USING_REAL_DATA && Boolean(storm.date && storm.donkiId);
+    const badge = isArchivedRecord ? 'Archived NASA data' : 'PREVIEW: sample data';
+    const dateLine = isArchivedRecord ? `This really happened on ${storm.date}` : 'Date: sample event (no date assigned)';
+    const sourceLine = isArchivedRecord ? `Source: NASA DONKI, event ${storm.donkiId}` : `Source: ${storm.source}`;
+    const typeName = storm.type === 'flare' ? 'Solar flare' : storm.type === 'CME' ? 'Coronal mass ejection' : 'Solar energetic particle event';
+    return `<section class="screen storm-screen" aria-labelledby="screenTitle">
+      <p class="eyebrow">Storm alert · Day ${state.day}</p><h1 class="screen-heading" id="screenTitle">A solar storm is arriving.</h1>
+      <p class="screen-intro">The crew is waiting for your decision. Read both outcomes before choosing.</p>
+      <div class="storm-layout">
+        <div class="scene-wrap storm-scene ${state.stormArriving ? 'arriving' : ''}">
+          <span class="scene-label">Storm conditions</span>
+          ${baseScene(state.meters)}
+          <div class="scene-caption"><strong>Outpost exposure view</strong><span>Choose whether the crew stays at work or shelters.</span></div>
+        </div>
+        <div class="storm-card">
+          <span class="storm-badge">${badge}</span>
+          <div style="display:flex;align-items:center;gap:13px;margin-top:14px">${stormIcon(storm.type, 48)}<div><p class="eyebrow" style="margin:0">${typeName}</p><h2>${storm.sizeNote}</h2></div></div>
+          <div class="storm-meta"><span><strong class="storm-strength">${strength}</strong> / 5 strength</span><span>${dateLine}</span></div>
+          <p>${sourceLine}</p>
+          <p class="meter-note">The game uses a simplified strength scale. It is not an official NASA rating.</p>
+          <div class="storm-choices" style="margin-top:20px">
+            <div class="choice"><h3>Keep working</h3><p>Your ${state.queue.length} queued job(s) will run in order. The crew then takes the full estimated dose: <strong>${fullDose}</strong>.</p><button class="button primary" onclick="resolveStorm('work')">Keep working</button></div>
+            <div class="choice"><h3>Shelter</h3><p>Queued jobs are discarded. The crew moves underground and takes an estimated dose of <strong>${shelterDose}</strong>.</p><button class="button secondary" onclick="resolveStorm('shelter')">Shelter</button></div>
+          </div>
+        </div>
+      </div>
+    </section>`;
+  }
+
+  function renderResult() {
+    const result = state.lastResult;
+    const labels = [['power','Power'],['oxygen','Oxygen'],['shield','Shielding'],['dose','Crew Dose']];
+    const lines = labels.map(function(item) {
+      const key = item[0];
+      const before = result.before[key];
+      const after = result.after[key];
+      let sentence = `${item[1]} went from ${before} to ${after}.`;
+      if (key === 'dose') sentence = `Crew Dose went from ${before} to ${after} (an increase of ${result.doseTaken}).`;
+      if (key === 'power' && result.solarGain > 0) sentence += ` Solar panels added ${result.solarGain} Power.`;
+      if (key === 'power' && result.solarGain === 0) sentence += ' Solar panels added no Power during lunar night.';
+      if (key === 'oxygen') sentence += ' The daily oxygen use has been counted.';
+      return `<div class="result-line"><strong>${item[1]}</strong><span>${sentence}</span></div>`;
+    }).join('');
+    const workText = result.choice === 'work' ? `The crew completed ${result.workDone.length} queued job(s).` : 'The crew sheltered. All queued jobs were discarded without being applied.';
+    return `<section class="screen" aria-labelledby="screenTitle">
+      <p class="eyebrow">Mission report · Day ${state.day}</p><h1 class="screen-heading" id="screenTitle">The storm has passed.</h1>
+      <p class="screen-intro">${workText}</p>
+      <div class="result-grid">${lines}</div>
+      <div class="result-note"><p><strong>Storm dose:</strong> ${result.doseTaken}. <strong>Science:</strong> ${state.meters.science}. <strong>Food harvest:</strong> ${state.meters.harvest}.</p></div>
+      <button class="button primary" onclick="continueFromResult()">See what the science says</button>
+    </section>`;
+  }
+
+  function learnIllustration(kind) {
+    if (kind === 'sep') return `<svg class="deep-illustration" viewBox="0 0 720 300" role="img" aria-label="Earth has a magnetic field and atmosphere that protect the ground; the Moon has neither">
+      <rect width="720" height="300" fill="#101416"/>
+      <text x="175" y="32" fill="#E6E3DC" font-size="20" text-anchor="middle" font-weight="bold">Earth</text><text x="545" y="32" fill="#E6E3DC" font-size="20" text-anchor="middle" font-weight="bold">Moon</text>
+      <path d="M28 62h294M398 62h294" stroke="#596064" stroke-width="1"/>
+      <g fill="#F2C230"><circle cx="54" cy="100" r="5"/><circle cx="82" cy="117" r="4"/><circle cx="112" cy="92" r="5"/></g>
+      <path d="M54 100 180 122M82 117 180 142M112 92 180 106" stroke="#F2C230" stroke-width="2"/>
+      <circle cx="180" cy="160" r="55" fill="#2B4A8C" stroke="#E6E3DC" stroke-width="2"/><path d="M139 135q35-22 69 1m-79 34q48 30 102-2" stroke="#A9C9C8" stroke-width="7" fill="none"/>
+      <ellipse cx="180" cy="160" rx="88" ry="68" fill="none" stroke="#A9C9C8" stroke-width="2" stroke-dasharray="6 5"/><ellipse cx="180" cy="160" rx="115" ry="90" fill="none" stroke="#C9A24A" stroke-width="2"/>
+      <text x="180" y="250" fill="#E6E3DC" text-anchor="middle" font-size="13">Ground: almost no dose</text>
+      <g fill="#F2C230"><circle cx="425" cy="100" r="5"/><circle cx="455" cy="117" r="4"/><circle cx="485" cy="92" r="5"/></g>
+      <path d="M425 100 555 145M455 117 555 160M485 92 555 130" stroke="#F2C230" stroke-width="2"/>
+      <circle cx="555" cy="160" r="55" fill="#9A958E" stroke="#E6E3DC" stroke-width="2"/><path d="M527 140q18-15 37 0m-49 37q26 17 62-1" stroke="#77736D" stroke-width="6" fill="none"/>
+      <rect x="444" y="73" width="222" height="174" fill="none" stroke="#F2C230" stroke-width="2" stroke-dasharray="7 6"/>
+      <text x="555" y="250" fill="#F2C230" text-anchor="middle" font-size="13">Surface crew exposed</text>
+      <text x="360" y="286" fill="#E6E3DC" text-anchor="middle" font-size="14">A shielded shelter cuts the dose</text>
+    </svg>`;
+    if (kind === 'flare') return `<svg class="deep-illustration" viewBox="0 0 720 220" role="img" aria-label="Flare class ladder A, B, C, M and X, each class ten times stronger than the previous">
+      <rect width="720" height="220" fill="#101416"/><text x="30" y="35" fill="#E6E3DC" font-size="16">Flare class ladder</text>
+      ${['A','B','C','M','X'].map(function(letter,i) { const h=35+i*27; return `<rect x="${65+i*125}" y="${165-h}" width="72" height="${h}" fill="${i===4?'#F2C230':'#2B4A8C'}" stroke="#E6E3DC" stroke-width="1.5"/><text x="${101+i*125}" y="190" text-anchor="middle" fill="#E6E3DC" font-size="18" font-weight="bold">${letter}</text>`; }).join('')}
+      <text x="360" y="214" fill="#BDB8B0" text-anchor="middle" font-size="12">Each class is ten times stronger than the one before it.</text>
+    </svg>`;
+    if (kind === 'timeline') return `<svg class="deep-illustration" viewBox="0 0 720 250" role="img" aria-label="Schematic not-to-scale comparison of flare, SEP and CME arrival times">
+      <rect width="720" height="250" fill="#101416"/><text x="28" y="30" fill="#E6E3DC" font-size="16">Arrival time comparison · not to scale</text>
+      <path d="M90 76H630M90 137H630M90 198H630" stroke="#596064" stroke-width="2"/>
+      <circle cx="90" cy="76" r="7" fill="#F2C230"/><path d="M90 76h95" stroke="#F2C230" stroke-width="4"/><path d="m178 68 12 8-12 8" fill="none" stroke="#F2C230" stroke-width="3"/><text x="215" y="81" fill="#E6E3DC" font-size="15">Flare light: about 8 minutes</text>
+      <circle cx="90" cy="137" r="7" fill="#F2C230"/><path d="M90 137h220" stroke="#C9A24A" stroke-width="4"/><path d="m303 129 12 8-12 8" fill="none" stroke="#C9A24A" stroke-width="3"/><text x="340" y="142" fill="#E6E3DC" font-size="15">SEP: minutes to a few hours</text>
+      <circle cx="90" cy="198" r="7" fill="#F2C230"/><path d="M90 198h410" stroke="#2B4A8C" stroke-width="4"/><path d="m493 190 12 8-12 8" fill="none" stroke="#2B4A8C" stroke-width="3"/><text x="520" y="203" fill="#E6E3DC" font-size="15">CME: roughly 15 hours to days</text>
+    </svg>`;
+    return `<svg class="deep-illustration" viewBox="0 0 720 210" role="img" aria-label="Earth, Moon and Mars communication delay comparison">
+      <rect width="720" height="210" fill="#101416"/><circle cx="110" cy="85" r="31" fill="#2B4A8C" stroke="#E6E3DC" stroke-width="2"/><circle cx="350" cy="85" r="13" fill="#9A958E" stroke="#E6E3DC" stroke-width="2"/><circle cx="600" cy="85" r="24" fill="#C9A24A" stroke="#E6E3DC" stroke-width="2"/>
+      <path d="M150 85h185m30 0h200" stroke="#E6E3DC" stroke-width="2" stroke-dasharray="6 5"/><text x="110" y="139" fill="#E6E3DC" text-anchor="middle" font-size="15">Earth</text><text x="350" y="139" fill="#E6E3DC" text-anchor="middle" font-size="15">Moon</text><text x="600" y="139" fill="#E6E3DC" text-anchor="middle" font-size="15">Mars</text>
+      <text x="230" y="65" fill="#F2C230" text-anchor="middle" font-size="13">1.3 seconds</text><text x="470" y="65" fill="#F2C230" text-anchor="middle" font-size="13">3–22 minutes</text><text x="360" y="184" fill="#BDB8B0" text-anchor="middle" font-size="13">Mars reply from Earth: 6–44 minutes</text>
+    </svg>`;
+  }
+
+  function renderLearn() {
+    const card = LEARN_CARDS[state.currentCard];
+    if (!card) return '';
+    const quick = card.quick.map(function(point) { return `<li>${icon(point[0])}<p>${point[1]}</p></li>`; }).join('');
+    const realLines = REAL_SCIENCE.filter(function(item) { return item.topic.toLowerCase() === state.currentCard.toLowerCase(); }).map(function(item) {
+      return `<div class="real-science"><strong>Real science:</strong> ${item.text} <span>Source: ${item.source} · Study: ${item.studyId}</span></div>`;
+    }).join('');
+    const myth = MYTHS[state.currentCard === 'SEP' ? 0 : state.currentCard === 'flare' ? 1 : 2];
+    return `<section class="screen" aria-labelledby="screenTitle">
+      <p class="eyebrow">Mission learning card · ${card.label}</p><h1 class="screen-heading" id="screenTitle">${card.title}</h1>
+      <p class="screen-intro">A quick explanation first. Open the deeper science when you are ready.</p>
+      <div class="learn-layout">
+        <div class="learn-main">
+          <h2 class="section-title">Quick points <small>Short version</small></h2>
+          <ul class="quick-points">${quick}</ul>
+          <button id="deepDiveToggle" class="button secondary" onclick="toggleDeepDive()" aria-expanded="${state.learnDeep}"> ${state.learnDeep ? 'Close deep dive' : 'Go deeper'} </button>
+          ${state.learnDeep ? `<div class="deep-dive"><h3>Deep dive</h3><p>${card.deep}</p>${learnIllustration(card.illustration)}<p class="sources">Sources: ${card.sources}</p></div>` : ''}
+          <div class="myth-strip"><h3>Myth vs real</h3><p><strong>Myth:</strong> ${myth.myth}</p><p><strong>Real:</strong> ${myth.real}</p></div>
+          ${realLines}
+          ${osdrLine(state.currentCard)}
+        </div>
+        <aside class="learn-side"><h3>Why this matters to the mission</h3><p>Good mission planning means understanding what a storm can do, how much warning the crew has, and what the base can afford to do before it arrives.</p><p><strong>Remember:</strong> safety, science and supplies share one small Power budget.</p></aside>
+      </div>
+      <div class="learn-actions"><button class="button primary" onclick="nextDay()">${state.learnReturn === 'briefing' ? 'Back to briefing' : (state.missionEnd ? 'Mission debrief' : 'Next day')}</button></div>
+    </section>`;
+  }
+
+  function renderDebrief() {
+    const scienceMet = state.meters.science >= CONFIG.goals.science;
+    const harvestMet = state.meters.harvest >= CONFIG.goals.harvest;
+    const survived = !state.missionEnd || state.missionEnd.type !== 'early';
+    const success = survived && scienceMet && harvestMet && state.meters.dose <= doseLimit() && state.meters.oxygen > 0;
+    let title = 'Mission ended early';
+    let message = state.missionEnd && state.missionEnd.reason ? state.missionEnd.reason : '';
+    if (success) {
+      title = 'Mission success';
+      message = 'The crew made it through all ten days and reached both mission goals.';
+    } else if (survived) {
+      title = 'You survived, but some goals were missed';
+      const misses = [];
+      if (!scienceMet) misses.push('Science reached ' + state.meters.science + ' of ' + CONFIG.goals.science + '.');
+      if (!harvestMet) misses.push('Food harvest reached ' + state.meters.harvest + ' of ' + CONFIG.goals.harvest + '.');
+      if (state.meters.dose > doseLimit()) misses.push('Crew Dose passed the mission limit.');
+      message = misses.join(' ') + ' One idea: plan a greenhouse or science action earlier, while there is enough Power.';
+    }
+    const rows = state.log.map(function(item) { return `<tr><td>${item.day}</td><td>${item.type === 'flare' ? 'Flare' : item.type}</td><td>${item.choice === 'work' ? 'Kept working' : 'Sheltered'}</td><td>${item.dose}</td><td>${item.power}</td><td>${item.oxygen}</td></tr>`; }).join('');
+    const unlocked = state.unlocked.length ? state.unlocked.map(function(id) { return `<span class="unlocked-tag">${LEARN_CARDS[id] ? LEARN_CARDS[id].label : id}</span>`; }).join('') : '<span class="unlocked-tag">No cards yet</span>';
+    return `<section class="screen" aria-labelledby="screenTitle">
+      <p class="eyebrow">Mission debrief</p><h1 class="screen-heading" id="screenTitle">${success ? 'Well planned, Commander.' : 'Mission review'}</h1>
+      <div class="debrief-summary"><h2>${title}</h2><p>${message}</p></div>
+      <div class="meters" style="max-width:620px"><div><strong>Power</strong><p>${state.meters.power} / 10</p></div><div><strong>Oxygen</strong><p>${state.meters.oxygen} / 10</p></div><div><strong>Science</strong><p>${state.meters.science} / ${CONFIG.goals.science} goal</p></div><div><strong>Food harvest</strong><p>${state.meters.harvest} / ${CONFIG.goals.harvest} goal</p></div><div><strong>Crew Dose</strong><p>${state.meters.dose} / ${doseLimit()} limit</p></div><div><strong>Days completed</strong><p>${state.log.length} / ${DAYS}</p></div></div>
+      <h2 class="section-title" style="margin-top:28px">Day-by-day log</h2>
+      <div style="overflow-x:auto"><table class="log-table"><thead><tr><th>Day</th><th>Storm</th><th>Choice</th><th>Dose</th><th>Power</th><th>Oxygen</th></tr></thead><tbody>${rows || '<tr><td colspan="6">No mission days recorded.</td></tr>'}</tbody></table></div>
+      <h2 class="section-title">Learning cards unlocked</h2><div class="unlocked-list">${unlocked}</div>
+      <div class="learn-actions"><button class="button primary" onclick="playAgain()">Play again</button><button class="button secondary" onclick="goHome()">Home</button></div>
+    </section>`;
+  }
+
+  function playAgain() {
+    selectedDifficulty = state.difficulty;
+    resetGame();
+    startBriefing();
+  }
+
+  function renderAbout() {
+    const radlab = RADLAB_FACT ? `<p><strong>RadLab:</strong> ${RADLAB_FACT.text} Instrument: ${RADLAB_FACT.instrument}. Date range: ${RADLAB_FACT.dateRange}. Dose: ${RADLAB_FACT.mSvPerDay} mSv per day.</p>` : '<p>RadLab (OSDR radiation dosimetry database) holds real dose measurements from the International Space Station: <a href="https://visualization.osdr.nasa.gov/radlab/gui/data-api/" target="_blank" rel="noopener">RadLab data API</a>. This version of the game does not display RadLab values.</p>';
+    const osdrItems = Object.keys(OSDR_RELATED).map(function(topic) { return `<li>Related NASA OSDR study (${escapeHtml(topic)} card): ${escapeHtml(OSDR_RELATED[topic].title)} · ${escapeHtml(OSDR_RELATED[topic].id)}</li>`; }).join('');
+    const realScience = REAL_SCIENCE.length ? REAL_SCIENCE.map(function(item) { return `<li>${item.topic}: ${item.text} Source: ${item.source} · Study: ${item.studyId}</li>`; }).join('') + osdrItems : (osdrItems || '<li>No external study records have been added yet.</li>');
+    return `<section class="screen" aria-labelledby="screenTitle">
+      <p class="eyebrow">Project information</p><h1 class="screen-heading" id="screenTitle">About and data</h1>
+      <p class="screen-intro">${GAME_TITLE} is a learning game about the trade-offs involved in operating a small Moon base during space weather.</p>
+      <div class="about-section"><h2>Real vs simplified</h2><div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Topic</th><th>What is real</th><th>What is simplified</th></tr></thead><tbody>
+        <tr><td>Storm dates and types</td><td>${USING_REAL_DATA ? 'Real NASA DONKI records: event dates, types and sizes.' : 'Real when archived records are loaded.'}</td><td>${USING_REAL_DATA ? 'Each record is real; the 1–5 strength and the warning time are our own simple mapping.' : 'This preview uses sample events.'}</td></tr>
+        <tr><td>Strength 1–5</td><td>Storms have different strengths.</td><td>This is the author’s own simplified mapping.</td></tr>
+        <tr><td>Moon environment</td><td>The Moon has no global magnetic field or thick air.</td><td>Not simplified in this game description.</td></tr>
+        <tr><td>Dose and action costs</td><td>Radiation exposure and resource use are real mission concerns.</td><td>All game values and action costs are simplified on purpose.</td></tr>
+        <tr><td>Mission length</td><td>A real Moon day lasts about 29.5 Earth days.</td><td>This mission lasts ten game days.</td></tr>
+      </tbody></table></div></div>
+      <div class="about-section"><h2>Sources</h2><ul><li><a href="https://ccmc.gsfc.nasa.gov/tools/DONKI/" target="_blank" rel="noopener">NASA DONKI</a> (Space Weather Database), at the Community Coordinated Modeling Center.</li><li><a href="https://osdr.nasa.gov/bio/repo/" target="_blank" rel="noopener">NASA Open Science Data Repository (OSDR)</a>.</li><li><a href="https://api.nasa.gov/" target="_blank" rel="noopener">NASA Open APIs</a>, used to request DONKI records.</li><li><a href="https://www.swpc.noaa.gov/noaa-scales-explanation" target="_blank" rel="noopener">NOAA Space Weather Prediction Center, Space Weather Scales</a>.</li></ul><p>Storm cards: ${stormDataMessage}</p><p>Live request status: ${liveDataMessage}. ${liveDataDetail}</p><ul>${realScience}</ul></div>
+      <div class="about-section"><h2>Credits and acknowledgements</h2>${radlab}<p>Related resource: the Canadian Space Agency’s <a href="https://www.asc-csa.gc.ca/eng/youth-educators/toolkits/food-production/" target="_blank" rel="noopener">food production toolkit</a>. This version of the game does not include a food learning card.</p><p>Illustrations are AI-assisted.</p><p>Built for the 2026 NASA Space Apps Challenge. Not affiliated with or endorsed by NASA.</p><p>Built with AI-assisted coding.</p></div>
+      <button class="button primary" onclick="closeAbout()">Back to mission</button>
+    </section>`;
+  }
+
+  // -------------------- LIVE DATA STATUS --------------------
+  async function loadLiveStorms() {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(function() { controller.abort(); }, 4000);
+    try {
+      // Confirm field names against the current DONKI response before using a production key.
+      const response = await fetch('https://api.nasa.gov/DONKI/FLR?api_key=' + NASA_KEY, { signal: controller.signal });
+      if (!response.ok) throw new Error('NASA DONKI request failed');
+      const records = await response.json();
+      const flareRecords = Array.isArray(records) ? records : [];
+      const classes = flareRecords.map(function(item) { return item.classType; }).filter(Boolean);
+      const order = ['A','B','C','M','X'];
+      const strongest = classes.sort(function(a,b) { return order.indexOf(b.charAt(0)) - order.indexOf(a.charAt(0)); })[0];
+      liveDataMessage = 'Live from NASA DONKI';
+      liveDataDetail = flareRecords.length + ' flare records returned.' + (strongest ? ' Strongest listed class: ' + strongest + '.' : ' No classType field was available.');
+    } catch (error) {
+      liveDataMessage = 'Archived NASA data: live request unavailable';
+      liveDataDetail = 'The mission can still be played offline using clearly marked sample events.';
+    } finally {
+      window.clearTimeout(timeout);
+      if (state.screen === 'title' || state.screen === 'about') render();
+    }
+  }
+
+  // -------------------- REAL NASA STORM RECORDS (added) --------------------
+  // These functions turn real NASA DONKI records into storm cards. If NASA cannot be reached,
+  // the game keeps using the clearly marked sample events, so it never breaks.
+  function escapeHtml(text) {
+    return String(text).replace(/[&<>"']/g, function(character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+    });
+  }
+
+  function dateOnly(value) {
+    const match = /^(\d{4}-\d{2}-\d{2})/.exec(String(value || ''));
+    return match ? match[1] : null;
+  }
+
+  function safeId(value) {
+    const text = String(value || '');
+    return /^[A-Za-z0-9._:+-]{3,80}$/.test(text) ? text : null;
+  }
+
+  // Our own simple 1-5 scale (not an official NASA rating). Flares: M1-M4 = 2, M5-M9 = 3, X1-X4 = 4, X5+ = 5.
+  function flareStrength(flareClass) {
+    const letter = flareClass.charAt(0);
+    const number = parseFloat(flareClass.slice(1)) || 1;
+    if (letter === 'X') return number < 5 ? 4 : 5;
+    if (letter === 'M') return number < 5 ? 2 : 3;
+    return 1;
+  }
+
+  // CME speed in km/s: under 500 = 1, 500-999 = 2, 1000-1499 = 3, 1500-1999 = 4, 2000+ = 5.
+  function cmeStrength(speed) {
+    if (typeof speed !== 'number' || isNaN(speed)) return 2;
+    return 1 + [500, 1000, 1500, 2000].filter(function(limit) { return speed >= limit; }).length;
+  }
+
+  function flareFromRecord(item) {
+    const flareClass = String(item.classType || '').toUpperCase();
+    if (!/^[MX]\d+(\.\d+)?$/.test(flareClass)) return null; // Keep only the bigger flares (M and X).
+    const date = dateOnly(item.peakTime || item.beginTime);
+    const id = safeId(item.flrID);
+    if (!date || !id) return null;
+    return { id: id, donkiId: id, type: 'flare', date: date, sizeNote: 'Class ' + flareClass + ' solar flare', strength: flareStrength(flareClass), warningDays: 0, source: 'NASA DONKI' };
+  }
+
+  function cmeFromRecord(item) {
+    const date = dateOnly(item.startTime);
+    const id = safeId(item.activityID);
+    if (!date || !id) return null;
+    const analyses = Array.isArray(item.cmeAnalyses) ? item.cmeAnalyses : [];
+    const best = analyses.find(function(a) { return a && a.isMostAccurate && typeof a.speed === 'number'; }) ||
+                 analyses.find(function(a) { return a && typeof a.speed === 'number'; });
+    const speed = best ? best.speed : null;
+    const note = speed ? 'CME at ' + Math.round(speed).toLocaleString('en-US') + ' km/s' : 'CME, speed not listed';
+    return { id: id, donkiId: id, type: 'CME', date: date, sizeNote: note, strength: cmeStrength(speed), warningDays: 2, source: 'NASA DONKI' };
+  }
+
+  function sepFromRecord(item) {
+    const date = dateOnly(item.eventTime);
+    const id = safeId(item.sepID);
+    if (!date || !id) return null;
+    // DONKI particle events carry no simple size in this list, so every one is rated 3 (our own simple choice).
+    return { id: id, donkiId: id, type: 'SEP', date: date, sizeNote: 'Solar energetic particle event', strength: 3, warningDays: 1, source: 'NASA DONKI' };
+  }
+
+  // Choose events spread from weakest to strongest so every mission has some variety.
+  function pickSpread(list, count) {
+    const seen = {};
+    const unique = list.filter(function(item) { if (seen[item.id]) return false; seen[item.id] = true; return true; });
+    const sorted = unique.sort(function(a, b) { return a.strength - b.strength || (a.date < b.date ? -1 : 1); });
+    if (sorted.length <= count) return sorted;
+    const picked = [];
+    for (let i = 0; i < count; i++) picked.push(sorted[Math.round(i * (sorted.length - 1) / (count - 1))]);
+    return picked.filter(function(item, index) { return picked.indexOf(item) === index; });
+  }
+
+  function isValidStorm(storm) {
+    return Boolean(storm) && ['flare', 'CME', 'SEP'].indexOf(storm.type) !== -1 &&
+      Number.isInteger(storm.strength) && storm.strength >= 1 && storm.strength <= 5 &&
+      Number.isInteger(storm.warningDays) && storm.warningDays >= 0 && storm.warningDays <= 2 &&
+      Boolean(dateOnly(storm.date)) && Boolean(safeId(storm.donkiId)) &&
+      typeof storm.sizeNote === 'string' && /^[A-Za-z0-9 ,.\/-]{1,80}$/.test(storm.sizeNote);
+  }
+
+  async function donkiGet(request) {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(function() { controller.abort(); }, 12000);
+    try {
+      const url = 'https://api.nasa.gov/DONKI/' + request.type + '?startDate=' + request.start + '&endDate=' + request.end + '&api_key=' + encodeURIComponent(NASA_KEY);
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error('DONKI ' + request.type + ' request failed: ' + response.status);
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  async function fetchDonkiStorms() {
+    const results = await Promise.allSettled(DONKI_REQUESTS.map(donkiGet));
+    const groups = { flare: [], CME: [], SEP: [] };
+    results.forEach(function(result, index) {
+      if (result.status !== 'fulfilled') return;
+      const type = DONKI_REQUESTS[index].type;
+      result.value.forEach(function(item) {
+        if (!item || typeof item !== 'object') return;
+        const storm = type === 'FLR' ? flareFromRecord(item) : type === 'CME' ? cmeFromRecord(item) : sepFromRecord(item);
+        if (storm) groups[storm.type].push(storm);
+      });
+    });
+    const picked = [].concat(pickSpread(groups.flare, MAX_PER_TYPE.flare), pickSpread(groups.CME, MAX_PER_TYPE.CME), pickSpread(groups.SEP, MAX_PER_TYPE.SEP));
+    if (picked.length < MIN_REAL_STORMS) throw new Error('Not enough DONKI events were returned.');
+    return picked;
+  }
+
+  function readStormCache() {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(STORM_CACHE_KEY) || 'null');
+      if (!saved || saved.signature !== JSON.stringify(DONKI_REQUESTS) || !Array.isArray(saved.storms)) return null;
+      const ageHours = (Date.now() - saved.savedAt) / 3600000;
+      if (!(ageHours >= 0 && ageHours < STORM_CACHE_HOURS)) return null;
+      const valid = saved.storms.filter(isValidStorm);
+      return valid.length >= MIN_REAL_STORMS ? valid : null;
+    } catch (error) {
+      return null; // Storage can be blocked. That is fine: the game just asks NASA again.
+    }
+  }
+
+  function writeStormCache(list) {
+    try {
+      window.localStorage.setItem(STORM_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), signature: JSON.stringify(DONKI_REQUESTS), storms: list }));
+    } catch (error) { /* Ignore: saving is only a convenience. */ }
+  }
+
+  // Put the real events into the game. A mission that has not started yet is refreshed too.
+  function refreshMissionStorms() {
+    const early = state.screen === 'title' || state.screen === 'briefing' ||
+      (state.screen === 'about' && (state.previousScreen === 'title' || state.previousScreen === 'briefing'));
+    if (early) {
+      const shuffled = shuffle(STORMS);
+      const list = [];
+      for (let i = 0; i < DAYS; i++) list.push(shuffled[i % shuffled.length]);
+      state.storms = list;
+    }
+    if (state.screen === 'title' || state.screen === 'about') render();
+  }
+
+  function applyRealStorms(list, how) {
+    STORMS.splice(0, STORMS.length, ...list);
+    USING_REAL_DATA = true;
+    stormDataMessage = 'Storm cards use ' + list.length + ' real NASA DONKI events (' + how + ').';
+    refreshMissionStorms();
+  }
+
+  async function loadRealStorms() {
+    if (NASA_KEY === 'DEMO_KEY') console.warn('Storm or Shine: using the shared DEMO_KEY. Add your own free key from api.nasa.gov to avoid rate limits.');
+    const cached = readStormCache();
+    if (cached) {
+      applyRealStorms(cached, 'saved from an earlier visit');
+      return;
+    }
+    try {
+      const fetched = await fetchDonkiStorms();
+      writeStormCache(fetched);
+      applyRealStorms(fetched, 'fetched from NASA just now');
+    } catch (error) {
+      const archived = ARCHIVED_STORMS.filter(isValidStorm);
+      if (archived.length >= MIN_REAL_STORMS) {
+        applyRealStorms(archived, 'archived file saved with the game');
+      } else {
+        stormDataMessage = 'Storm cards use clearly marked sample events because NASA DONKI could not be reached.';
+        if (state.screen === 'title' || state.screen === 'about') render();
+      }
+    }
+  }
+
+  // Looks for related spaceflight studies in NASA OSDR and shows one title per learning card.
+  // It only lists a study; it does not claim the study proves anything on the card.
+  async function loadOsdrRelated() {
+    if (!OSDR_LOOKUP) return;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(function() { controller.abort(); }, 8000);
+    try {
+      const response = await fetch('https://osdr.nasa.gov/osdr/data/search?term=' + encodeURIComponent('spaceflight radiation'), { signal: controller.signal });
+      if (!response.ok) throw new Error('OSDR search failed');
+      const data = await response.json();
+      const hits = data && data.hits && Array.isArray(data.hits.hits) ? data.hits.hits : [];
+      const found = [];
+      hits.forEach(function(hit) {
+        const source = (hit && hit._source) || {};
+        const id = String(source.Accession || '');
+        const title = String(source['Study Title'] || '').trim();
+        if (/^OSD-\d+$/.test(id) && title && title.length < 220 && /space|radiation|microgravity/i.test(title) && !found.some(function(f) { return f.id === id; })) found.push({ id: id, title: title });
+      });
+      ['SEP', 'flare', 'CME'].forEach(function(topic, index) { if (found[index]) OSDR_RELATED[topic] = found[index]; });
+    } catch (error) {
+      // No OSDR line is shown. The game works the same without it.
+    } finally {
+      window.clearTimeout(timeout);
+      if (state.screen === 'about') render();
+    }
+  }
+
+  function osdrLine(topic) {
+    const item = OSDR_RELATED[topic];
+    if (!item) return '';
+    return `<div class="real-science"><strong>Explore related NASA research:</strong> ${escapeHtml(item.title)} <span>NASA OSDR study ${escapeHtml(item.id)} · <a href="${OSDR_REPOSITORY_URL}" target="_blank" rel="noopener">Open the NASA OSDR repository</a></span></div>`;
+  }
+
+  // Start at the title screen, then check the live-data panel and load the real NASA storm records.
+  resetGame();
+  loadLiveStorms();
+  loadRealStorms();
+  loadOsdrRelated();
+</script>
+</body>
+</html>
